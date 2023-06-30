@@ -22,7 +22,7 @@ from . import views
 app_name = "draftapp"
 urlpatterns = [
     #/draftapp/
-    path('', views.IndexView.as_view(), name = 'index'),  #app homepage
+    path('', views.IndexView, name = 'index'),  #app homepage
     path('Gwas_search_extended/', views.gwas_search_extended, name = 'gwas_search_extended'),
     path('Gwas_search_extended/Gwas_result/', views.gwas_search_results_dict_2, name = 'Gwas_search_results_dict'),
     path('Snp_search/', views.snp_search, name = 'snp_search'),

@@ -7,14 +7,9 @@ import httpx
 from django.db.models import Q, Prefetch
 
 # Create your views here.
-class IndexView(generic.ListView):
-    template_name = 'draftapp/index.html'
-    #context_object_name = 'sneep'
+def IndexView(request):
+    return render(request, 'draftapp/index.html')
     
-    def get_queryset(self):
-        queryset = {'enhancers': Enhancers.objects.all()[:10],
-                   'enhancersxsnps': Enhancersxsnps.objects.all()[:10]}
-        return queryset
 
 
 
