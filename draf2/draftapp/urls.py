@@ -15,19 +15,13 @@ Including another URLconf
 """
 from django.urls import path, re_path
 from . import views
-#from django.contrib.staticfiles.storage import staticfiles_storage
-#from django.views.generic.base import RedirectView
-
 
 app_name = "draftapp"
 urlpatterns = [
     #/draftapp/
     path('', views.IndexView.as_view(), name = 'index'),  #app homepage
     path('Gwas_search_extended/', views.gwas_search_extended, name = 'gwas_search_extended'),
-    #path('Gwas_search_extended/Gwas_result/', views.gwas_search_test, name = 'Gwas_search_results_test'),
     path('Gwas_search_extended/Gwas_result/', views.gwas_search_results_dict_2, name = 'Gwas_search_results_dict'),
-    #path('Gwas_search_extended/Gwas_result/', views.gwas_search_tfsxsnps_results, name = 'Gwas_search_results_tfsxsnps'),
-    
     path('Snp_search/', views.snp_search, name = 'snp_search'),
     path('Snp_search_results/', views.snp_search_results, name = 'snp_search_results'),
     path('Snps/<pk>/', views.SnpsDetailView.as_view(), name = 'snps_detail'),
@@ -35,7 +29,3 @@ urlpatterns = [
     path('Gene_search/Gene_result/', views.gene_search_results_snps, name = 'gene_search_results'),
  ]
 
-#path('Gwas/<int:pk>/', views.GwasView.as_view(), name = 'gwas_view'),
-    #path('Gwas/<pk>/', views.TfsxsnpsView.as_view(), name = 'Tfsxsnps_view'),
-    #/draftapp/enhnacerid/
-    #path('<int:pk>/', views.EnhancersxsnpsDetailView.as_view(), name = 'enhancersxsnps_detail'),
