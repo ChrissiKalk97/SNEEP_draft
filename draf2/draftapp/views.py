@@ -17,25 +17,6 @@ class IndexView(generic.ListView):
         return queryset
 
 
-class SnpsDetailView(generic.DetailView):
-    model = Snps
-    template_name = 'draftapp/snps_detail.html' 
-
-
-
-def gwas_search(request):
-    if request.method == 'GET':
-        query = request.GET.get('gwas_trait')
-        if query:
-            gwas_info = Gwasinfo.objects.filter(name__icontains = query)
-            if gwas_info:
-                tfsxsnps = Tfsxsnps.objects.filter(efoid__efoid__name__icontains = query)
-                enhnacerxsnps = Enhancersxsnps.objects.filter(efoid__efoid__name__icontains = query)
-                return render(request, 'draftapp/gwas_search_results.html', {'tfsxsnps': tfsxsnps, 'enhnacerxsnps': enhnacerxsnps})
-            else:
-                raise Http404("The given GWAS trait cannot be found")
-        else:
-                raise Http404("No GWAS given")
 
 def gwas_search_extended(request):
     gwases = Gwasinfo.objects.all()
@@ -97,37 +78,48 @@ def snp_search_results(request):
 
 
 def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
-    #if trans_fac:
-        #tf_query = Tfs.objects.filter(Q(Tfsxsnps_tfId__efoid__efoid__name__icontains = gwas) & Q(name__in = trans_fac))
-    #else:
-        #tf_query = Tfs.objects.filter(Q(Tfsxsnps_tfId__efoid__efoid__name__icontains = gwas))
+    snps = [rsnp["rsid"] for rsnp in snps_unique]
+    if trans_fac:
+        tfs = Tfsxsnps.objects.filter(Q(tfid__name__in = trans_fac)& Q(rsid__rsid__in = snps)& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid", "rsid")
+    else:
+        tfs = Tfsxsnps.objects.filter(Q(rsid__rsid__in = snps)& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid", "rsid")
+    #genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__in = snps)).values("genesymbol", "geneid")
+    exs = Enhancersxsnps.objects.filter(rsid__rsid__in = snps).values("enhancerid", "rsid")
     for snp in snps_unique:
-        if trans_fac:
-            tfs = Tfs.objects.filter(Q(name__in = trans_fac)& Q(Tfsxsnps_tfId__rsid__rsid__exact = snp["rsid"])& Q(Tfsxsnps_tfId__efoid__efoid__name__exact = gwas)).distinct().values("name")
-        else:
-            tfs = Tfs.objects.filter(Q(Tfsxsnps_tfId__rsid__rsid__exact = snp["rsid"])& Q(Tfsxsnps_tfId__efoid__efoid__name__exact = gwas)).distinct().values("name")
-        
-        #tfs =  tf_query.filter(Q(Tfsxsnps_tfId__rsid__rsid__icontains = snp["rsid"])).distinct().values("name")
-        #enhancers = Enhancers.objects.filter(Q(Enhancersxsnps_enhancerId__rsid__rsid__icontains = snp["rsid"])).values("enhancerid")
-        genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__exact = snp["rsid"])).values("genesymbol", "geneid")
-        exs = Enhancersxsnps.objects.filter(rsid__rsid__exact = snp["rsid"]).values("enhancerid")
         snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", ""]
         for tf in tfs:
-            snp_dict[snp["rsid"]][1] += tf["name"]+", "
-        for gene in genes:
-            snp_dict[snp["rsid"]][2] += gene["genesymbol"]+", "
-            snp_dict[snp["rsid"]][3] += gene["geneid"]+", "
-        #for en in enhancers:
-            #snp_dict[snp["rsid"]][4] += en["enhancerid"]+", "
+            if tf["rsid"] == snp["rsid"]:
+                snp_dict[snp["rsid"]][1] += tf["tfid"]+", "
+        #for gene in genes:
+            #snp_dict[snp["rsid"]][2] += gene["genesymbol"]+", "
+            #snp_dict[snp["rsid"]][3] += gene["geneid"]+", "
         for ex in exs:
-            snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", "
-       
+            if ex["rsid"] == snp["rsid"]:
+                snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", "
+    """for snp in snps_unique:
+        if trans_fac:
+            tfs = Tfsxsnps.objects.filter(Q(tfid__name__in = trans_fac)& Q(rsid__rsid__in = snp["rsid"])& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid")
+        else:
+            tfs = Tfsxsnps.objects.filter(Q(rsid__rsid__in = snp["rsid"])& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid")
+    #genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__in = snps)).values("genesymbol", "geneid")
+        exs = Enhancersxsnps.objects.filter(rsid__rsid__in = snp["rsid"]).values("enhancerid")
+        snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", ""]
+        for tf in tfs:
+            #if tf["rsid"] == snp["rsid"]:
+            snp_dict[snp["rsid"]][1] += tf["tfid"]+", "
+        #for gene in genes:
+            #snp_dict[snp["rsid"]][2] += gene["genesymbol"]+", "
+            #snp_dict[snp["rsid"]][3] += gene["geneid"]+", "
+        for ex in exs:
+            #if ex["rsid"] == snp["rsid"]:
+            snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", """
+        
     for snp, info in snp_dict.items():
         if snp_dict[snp][1] != "":
             snp_dict[snp][1] = info[1][:-2]
-        else: 
+        else:
             snp_dict[snp][1] = "Unknown"
-        if snp_dict[snp][2] != "":
+        if snp_dict[snp][4] != "":
             snp_dict[snp][2] = info[2][:-2]
             snp_dict[snp][3] = info[3][:-2]
             snp_dict[snp][4] = info[4][:-2]
@@ -163,6 +155,7 @@ def gwas_search_results_dict_2(request):
                     snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas) & \
                                                         Q(Tfsxsnps_rsId__tfid__name__in = tf)).distinct()\
                                                          .only("rsid", "chr", "start", "end").values()
+                    
                     snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas)
                 else:
                     snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas)) \
