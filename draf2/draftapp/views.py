@@ -264,14 +264,14 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
         #tf_query = Tfs.objects.filter(Q(Tfsxsnps_tfId__efoid__efoid__name__icontains = gwas))
     for snp in snps_unique:
         if trans_fac:
-            tfs = Tfs.objects.filter(Q(name__in = trans_fac)& Q(Tfsxsnps_tfId__rsid__rsid__icontains = snp["rsid"])& Q(Tfsxsnps_tfId__efoid__efoid__name__icontains = gwas)).distinct().values("name")
+            tfs = Tfs.objects.filter(Q(name__in = trans_fac)& Q(Tfsxsnps_tfId__rsid__rsid__exact = snp["rsid"])& Q(Tfsxsnps_tfId__efoid__efoid__name__exact = gwas)).distinct().values("name")
         else:
-            tfs = Tfs.objects.filter(Q(Tfsxsnps_tfId__rsid__rsid__icontains = snp["rsid"])& Q(Tfsxsnps_tfId__efoid__efoid__name__icontains = gwas)).distinct().values("name")
+            tfs = Tfs.objects.filter(Q(Tfsxsnps_tfId__rsid__rsid__exact = snp["rsid"])& Q(Tfsxsnps_tfId__efoid__efoid__name__exact = gwas)).distinct().values("name")
         
         #tfs =  tf_query.filter(Q(Tfsxsnps_tfId__rsid__rsid__icontains = snp["rsid"])).distinct().values("name")
         #enhancers = Enhancers.objects.filter(Q(Enhancersxsnps_enhancerId__rsid__rsid__icontains = snp["rsid"])).values("enhancerid")
-        genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__icontains = snp["rsid"])).values("genesymbol", "geneid")
-        exs = Enhancersxsnps.objects.filter(rsid__rsid__icontains = snp["rsid"]).values("enhancerid")
+        genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__exact = snp["rsid"])).values("genesymbol", "geneid")
+        exs = Enhancersxsnps.objects.filter(rsid__rsid__exact = snp["rsid"]).values("enhancerid")
         snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", ""]
         for tf in tfs:
             snp_dict[snp["rsid"]][1] += tf["name"]+", "
@@ -306,27 +306,27 @@ def gwas_search_results_dict_2(request):
             tf.append(transcription_factor)
         chromosome = request.GET.getlist('chromosome[]')
         if gwas:
-            gwas_info = Gwasinfo.objects.filter(name__icontains = gwas)#this we could leave out, but then no test whether GWAS exists: 
+            gwas_info = Gwasinfo.objects.filter(name__exact = gwas)#this we could leave out, but then no test whether GWAS exists: 
             #also this step should not be critical for performance...
             if gwas_info:
                 snp_dict = {}
                 if tf and chromosome:#would this whole thing be quicker if I could filter  for snps directly?
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__icontains = gwas) & \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas) & \
                                                         Q(Tfsxsnps_rsId__tfid__name__in = tf) & Q(chr__in = chromosome)).distinct()\
                                                          .values()
                     snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas)    
                 elif chromosome:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__icontains = gwas) & \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas) & \
                                                         Q(chr__in = chromosome)).distinct()\
                                                          .only("rsid", "chr", "start", "end").values()
                     snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas)
                 elif tf:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__icontains = gwas) & \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas) & \
                                                         Q(Tfsxsnps_rsId__tfid__name__in = tf)).distinct()\
                                                          .only("rsid", "chr", "start", "end").values()
                     snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas)
                 else:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__icontains = gwas)) \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas)) \
                                                       .distinct().only("rsid", "chr", "start", "end").values()
                     snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas)
                 return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict, 'gwas': gwas})
