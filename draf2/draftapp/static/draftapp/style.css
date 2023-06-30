@@ -1,0 +1,40 @@
+body{
+    background: white url("images/white-simple-textured-design-background.jpg") no-repeat;
+    
+}
+
+  table.dataTable thead tr {
+    background-color: #CCFFFF;
+    color: black;
+  }
+  table.dataTable tbody {
+    background-color: #e8f7f7;
+    color: black;
+  }
+  select:required:invalid {
+    color: #666 !important;
+  }
+  option[value=""][disabled] {
+    display: none !important;
+  }
+  option {
+    color: #000 !important;
+  }
+
+
+  /* In case we want to customize navbar  colors at some point...
+  
+  .navbar-custom {
+    background-color: #ff5500;
+} change the brand and text color
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: rgba(255,255,255,.8);
+} change the link color 
+.navbar-custom .navbar-nav .nav-link {
+    color: rgba(255,255,255,.5);
+} change the color of active or hovered links 
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #ffffff;
+}*/

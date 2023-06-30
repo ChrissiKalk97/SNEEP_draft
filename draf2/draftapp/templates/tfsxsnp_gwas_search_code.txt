@@ -1,0 +1,152 @@
+
+    <!-- <table id = "table" class = "table table-bordered">
+        <thead class = "alert-success">
+            <tr>
+              <th>GWAS trait</th>
+              <th>rSNP</th>
+              <th>Chromosome:Start-End</th>
+              <th>TF</th>
+              <th>Gene</th>
+              <th>Ensembl id</th>
+              <th>Enhancers</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+            {% for snp in snps_unique%}
+            
+              <tr>
+                <td>{{gwas}}</td>
+                <td><a href="{% url 'draftapp:snps_detail' snp.rsid %}">{{snp.rsid}} </a></td>
+                <td>{{snp.chr}}:{{snp.start}}-{{snp.end}}</td>
+                <td> {% if snp.Tfsxsnps_rsId.all%}
+                  {% for tfsxsnp in snp.Tfsxsnps_rsId.all%}
+                    {% if tfsxsnp == snp.Tfsxsnps_rsId.last%}
+                      {{tfsxsnp.tfid.name}}
+                    {% else%}
+                      {{tfsxsnp.tfid.name}}, 
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Unknown
+                {% endif %} 
+            </td>
+                
+                <td>{% if snp.enhancersxsnpsrsid.all%}
+                  {% for exs in snp.enhancersxsnpsrsid.all%}
+                    {% if exs == snp.enhancersxsnpsrsid.last%}
+                      {{exs.enhancerid.targetgene.genesymbol}}
+                    {% else %}
+                      {{exs.enhancerid.targetgene.genesymbol}}, 
+                      {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Unknown
+                {% endif %}
+                  </td>
+
+                  <td>{% if snp.enhancersxsnpsrsid.all%}
+                    {% for exs in snp.enhancersxsnpsrsid.all%}
+                      {% if exs == snp.enhancersxsnpsrsid.last%}
+                        {{exs.enhancerid.targetgene.geneid}}
+                      {% else %}
+                        {{exs.enhancerid.targetgene.geneid}}, 
+                        {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    Unknown
+                  {% endif %}
+                    </td>
+
+
+                  
+                  <td>{% if snp.enhancersxsnpsrsid.all%}
+                    {% for exs in snp.enhancersxsnpsrsid.all%}
+                      {% if exs == snp.enhancersxsnpsrsid.last%}
+                        {{exs.enhancerid.enhancerid}}
+                      {% else %}
+                        {{exs.enhancerid.enhancerid}}, 
+                        {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    Unknown
+                  {% endif %}
+                    </td>
+              </tr>
+              
+            {% endfor %}
+        </tbody>
+    </table>-->
+	
+	
+	
+			
+			<table id = "table" class = "table table-bordered">
+      <thead class = "alert-success">
+          <tr>
+            <th>GWAS trait</th>
+            <th>rSNP</th>
+            <th>Chromosome:Start-End</th>
+            <th>TF</th>
+            <th>Gene</th>
+            <th>Ensembl id</th>
+            <th>Enhancers</th>
+			
+          </tr>
+      </thead>
+      <tbody>
+        
+			 {% for tfsxsnp in tfsxsnps%}
+          
+            <tr>
+              <td>{{gwas}}</td>
+              <td><a href="{% url 'draftapp:snps_detail' tfsxsnp.rsid.rsid %}">{{tfsxsnp.rsid.rsid}} </a></td>
+              <td>{{tfsxsnp.rsid.chr}}:{{tfsxsnp.rsid.start}}-{{tfsxsnp.rsid.end}}</td>
+              <td>{{tfsxsnp.tfid.name}}</td>
+              <td>{% if tfsxsnp.rsid.enhancersxsnpsrsid.all%}
+                {% for exs in tfsxsnp.rsid.enhancersxsnpsrsid.all%}
+                  {% if exs == tfsxsnp.rsid.enhancersxsnpsrsid.last%}
+                    {{exs.enhancerid.targetgene.genesymbol}}
+                  {% else %}
+                    {{exs.enhancerid.targetgene.genesymbol}}, 
+                    {% endif %}
+                {% endfor %}
+              {% else %}
+                Unknown
+              {% endif %}
+                </td>
+
+                <td>{% if tfsxsnp.rsid.enhancersxsnpsrsid.all%}
+                  {% for exs in tfsxsnp.rsid.enhancersxsnpsrsid.all%}
+                    {% if exs == tfsxsnp.rsid.enhancersxsnpsrsid.last%}
+                      {{exs.enhancerid.targetgene.geneid}}
+                    {% else %}
+                      {{exs.enhancerid.targetgene.geneid}}, 
+                      {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Unknown
+                {% endif %}
+                  </td>
+
+
+                
+                <td>{% if tfsxsnp.rsid.enhancersxsnpsrsid.all%}
+                  {% for exs in tfsxsnp.rsid.enhancersxsnpsrsid.all%}
+                    {% if exs == tfsxsnp.rsid.enhancersxsnpsrsid.last%}
+                      {{exs.enhancerid.enhancerid}}
+                    {% else %}
+                      {{exs.enhancerid.enhancerid}}, 
+                      {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Unknown
+                {% endif %}
+                  </td>
+            </tr>
+            
+          {% endfor %}
+      </tbody>
+  </table>
+  
+			

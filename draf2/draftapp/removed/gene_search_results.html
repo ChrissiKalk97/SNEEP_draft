@@ -1,0 +1,90 @@
+{% extends "draftapp/base.html" %}
+{% block body%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel="stylesheet" type= "text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type = "text/javascript">
+    $(document).ready(function(){
+        $('#table').DataTable();
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+          ];
+    });
+  </script>
+  {% if gene_dict %} 
+      <h3>Gene query results:</h3> 
+ 
+   <table id = "table" class = "table table-bordered">
+        <thead class = "alert-success">
+            <tr>
+              <th>Gene</th>
+              <th>associated rSNP</th>
+              <th>Gene Chromosome, Start, End</th>
+              <th>GWAS traits associated to rSNPs</th>
+              <th>Enhancers</th>
+              <th>Transcription factors</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+          
+          {% for gene, exs in gene_dict.items %}
+            {% for exs_single in exs %}
+            <tr>
+              <td>{{gene.genesymbol}}</td>
+              <td><a href="{% url 'draftapp:snps_detail' exs_single.rsid.rsid %}">{{exs_single.rsid.rsid}}</a></td>
+              <td>{{gene.chr}}, {{gene.start}}, {{gene.end}}</td>
+              <td>{{exs_single.efoid.efoid.name}}</td>
+              <td>{{exs_single.enhancerid.enhancerid}}</td>
+              <td>{% for tfsXsnp in exs_single.rsid.Tfsxsnps_rsId.all %}
+                    {% if tfsXsnp == exs_single.rsid.Tfsxsnps_rsId.last%} 
+                      {{tfsXsnp.tfid.name}}
+                    {% else %} 
+                      {{tfsXsnp.tfid.name}}, 
+                    {% endif %}
+                  {% endfor %}
+              </td>
+            </tr>
+               
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+    </table>
+  
+
+
+ <!--   {% for gene, exgs in gene_dict.items %}
+{{exgs}}
+{{gene.genesymbol}}
+  {% for exgs in exgs.values %}
+  {{ exg }}
+    {% for exs in exg.efoid.Enhancersxsnps_efoId.all %}
+      {% for tfsxsnp in exg.efoid.Tfsxsnps_efoId.all %}
+  <tr>
+    <td>{{ gene.genesymbol }}</td>
+   <td><a href="{% url 'draftapp:snps_detail' tfsxsnp.rsid.rsid %}">{{exs.rsid.rsid}}</a></td>
+    <td>{{exs.rsid.chr}}</td>
+    <td>{{exs.rsid.start}}</td>
+    <td>{{exs.rsid.end}}</td>
+    <td>{{exg.efoid.efoid.name}} </td>
+    <td>{{tfsxsnp.tfid.name}}</td>
+    
+
+  </tr>
+       {% endfor %}
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
+
+  
+</tbody>
+</table>-->
+
+  {% else %}
+      <h3>This Gene is not investigated by us!</h3>
+  {% endif %}
+  
+
+{% endblock %}
+

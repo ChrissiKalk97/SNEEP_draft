@@ -1,0 +1,34 @@
+{% extends "draftapp/base.html" %}
+{% block body%}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-4" style = "text-align: center;">
+      <h4>SNEEP: How is transcription factor binding activity influenced by genetic variants?
+      </h4>
+    </div>
+    <div class="col-6 text-center">
+      <h4>Explore the query options for SNEEP:</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4" style = "text-align: justify;">
+      Regulatory sinel nucleotide polymorphisms (rSNPs) are predominantly found in non-coding regions. These changes of one base in the DNA 
+        can influence the binding affinity of transcription facotrs and with that the gene expression of target genes. SNEEP links rSNPs to the TFs influenced...
+    </div>
+    <div class="col-2 text-center">
+      <a href="{% url 'draftapp:gwas_search_extended' %}" class="btn" style="background-color: #00CED1;" role="button">GWAS search </a>
+    </div>
+    <div class="col-2 text-center">
+      <a href="{% url 'draftapp:gene_search' %}" class="btn" style="background-color: #00CED1;" role="button">Gene search </a>
+    </div>
+    <div class="col-2 text-center">
+      <a href="{% url 'draftapp:snp_search' %}" class="btn" style="background-color: #00CED1;" role="button">SNP search </a>
+    </div>
+  </div>
+</div>
+
+          
+          
+          
+{% endblock %}
+

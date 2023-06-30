@@ -1,0 +1,53 @@
+{% extends "draftapp/base.html" %}
+{% block body%}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<div class="container">
+  <div class = "row h-200">
+    <div class="col-6">
+  <h4>Enter a gene to find associated rSNPs:</h2>
+  </div>
+  <div class = "row input-group text-center">
+  <div class="col-2">
+<form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
+  <input class="form-control me-2 d-flex" type="search" name="gene" placeholder="gene" aria-label="Search" id="tags" value="">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  
+  <script>
+    $(function () {
+        var availableTags = [
+            {% for gene in genes %}
+        "{{gene.genesymbol}}",
+        {% endfor %}
+];
+$("#tags").autocomplete({
+    source: function(request, response) {
+        var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+        response(results.slice(0, 20));
+    }
+});
+  } );
+</script>
+</div>
+    <div class = "row h-100 mt-5">
+      <div class="col-12 mx-auto">
+        <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
+      </form>
+      </div>
+      </div>
+</div>
+</div>
+</div>
+
+<script>function exemplaryGeneQuery() {
+  document.getElementById('tags').value = "EBF1";
+}</script>
+<button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
+
+
+
+{% endblock %}
+
+  

@@ -1,0 +1,143 @@
+
+{% extends "draftapp/base.html" %}
+{% block body%}
+
+
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
+
+<div class="container">
+  <div class = "row h-200">
+    <div class="col-4">
+  <h4>Query rSNPs for a GWAS trait:</h2>
+  </div>
+  <div class="col-4">
+    <h4>Query rSNPs for a transcription factor:</h2>
+    </div>
+    <div class="col-4">
+      <h4>Query rSNPs of a chromosome:</h2>
+      </div>
+  </div>
+
+  
+  
+
+
+  <div class = "row input-group">
+  <div class="col-4">
+<form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
+  <input class="form-control me-2 d-flex" type="search" name="gwas_trait" placeholder="gwas_trait" aria-label="Search" id="tags">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  
+  <script>
+    $(function () {
+        var availableTags = [
+            {% for gwas in gwases %}
+        "{{gwas.name}}",
+        {% endfor %}
+];
+    $("#tags").autocomplete({
+        source: availableTags
+    });
+} );
+</script>
+</div>
+
+<div class="col-4">
+     <select name="tf[]"  id ="tf" class = "tf"  multiple>
+     
+      {%for tf in tfs%}
+       <option value= "{{tf.name}}"> {{tf.name}}</option>
+       {% endfor %}
+   </select>
+</div>
+
+<div class="col-4">
+  <select name="chromosome[]"  id ="chr" class = "chr"  multiple>
+   
+   {%for CHR in chrs%}
+    <option value= "{{CHR}}"> {{CHR}}</option>
+    {% endfor %}
+</select>
+</div>
+
+ 
+    <div class = "row h-100 mt-5">
+      <div class="col-4 mx-auto">
+        <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
+      </form>
+      </div>
+      </div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+  new MultiSelectTag('tf', {
+    rounded: true,    // default true
+    shadow: true,      // default false
+    placeholder: 'transcription factors',  // default Search...
+})
+new MultiSelectTag('chr', {
+    rounded: true,    // default true
+    shadow: true,      // default false
+    placeholder: 'chromosome',  // default Search...
+})
+</script>
+
+
+
+<script>function exemplaryGeneQuery() {
+  document.getElementById('tags').value = "atherosclerosis";
+  $('#tf').val(["AIRE"]);
+  
+  document.getElementById('chr_tags').value = "chr11";
+}</script>
+<button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
+{% endblock %}
+
+
+
+
+<!-- <input class="form-control me-2 d-flex" type="search" name="transcription_factor" placeholder="transcription factor" aria-label="Search" id="tf_tags">
+  </div>
+  <script>
+    $(function () {
+        var tfTags = [
+            {% for tf in tfs %}
+        "{{tf.name}}",
+        {% endfor %}
+];
+    $("#tf_tags").autocomplete({
+        source: tfTags
+    });
+} );
+</script>
+
+
+ <div class="col-4">
+      <input class="form-control me-2 d-flex" type="search" name="chromosome" placeholder="chromosome" aria-label="Search" id="chr_tags">
+      <script>
+        $(function () {
+            var chrTags = [
+                {% for CHR in chrs %}
+            "{{CHR}}",
+            {% endfor %}
+    ];
+        $("#chr_tags").autocomplete({
+            source: chrTags
+        });
+    } );
+    </script>
+    
+    </div>-->
+
+
+  
