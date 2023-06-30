@@ -63,7 +63,7 @@ def snp_search(request):
 def snp_search_results(request):
     if request.method == 'GET':
         query = request.GET.get('rSNP')
-        snp = Snps.objects.get(rsid = query)
+        snp = Snps.objects.get(rsid__exact = query)
     return render(request, 'draftapp/snps_detail.html', {"object": snp})
 
  
