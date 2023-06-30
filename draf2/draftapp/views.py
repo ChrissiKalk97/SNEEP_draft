@@ -97,7 +97,7 @@ def snp_search_results(request):
 
 
 def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
-    """"snps = [rsnp["rsid"] for rsnp in snps_unique]
+    snps = [rsnp["rsid"] for rsnp in snps_unique]
     if trans_fac:
         tfs = Tfsxsnps.objects.filter(Q(tfid__name__in = trans_fac)& Q(rsid__rsid__in = snps)& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid", "rsid")
     else:
@@ -114,8 +114,8 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
             #snp_dict[snp["rsid"]][3] += gene["geneid"]+", "
         for ex in exs:
             if ex["rsid"] == snp["rsid"]:
-                snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", """
-    for snp in snps_unique:
+                snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", "
+    """for snp in snps_unique:
         if trans_fac:
             tfs = Tfsxsnps.objects.filter(Q(tfid__name__in = trans_fac)& Q(rsid__rsid__in = snp["rsid"])& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid")
         else:
@@ -131,7 +131,7 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
             #snp_dict[snp["rsid"]][3] += gene["geneid"]+", "
         for ex in exs:
             #if ex["rsid"] == snp["rsid"]:
-            snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", "
+            snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", """
         
     for snp, info in snp_dict.items():
         if snp_dict[snp][1] != "":
