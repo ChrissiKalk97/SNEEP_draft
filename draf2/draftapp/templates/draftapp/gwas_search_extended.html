@@ -96,9 +96,8 @@ new MultiSelectTag('chr', {
 
 <script>function exemplaryGeneQuery() {
   document.getElementById('tags').value = "atherosclerosis";
-  $('#tf').val(["AIRE"]);
-  
-  document.getElementById('chr_tags').value = "chr11";
+  $('#tf').val(["AIRE", "EBF3", "ZBTB6"]);
+  $('#chr').val(["chr11", "chr12"]);
 }</script>
 <button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
 {% endblock %}
@@ -106,38 +105,6 @@ new MultiSelectTag('chr', {
 
 
 
-<!-- <input class="form-control me-2 d-flex" type="search" name="transcription_factor" placeholder="transcription factor" aria-label="Search" id="tf_tags">
-  </div>
-  <script>
-    $(function () {
-        var tfTags = [
-            {% for tf in tfs %}
-        "{{tf.name}}",
-        {% endfor %}
-];
-    $("#tf_tags").autocomplete({
-        source: tfTags
-    });
-} );
-</script>
-
-
- <div class="col-4">
-      <input class="form-control me-2 d-flex" type="search" name="chromosome" placeholder="chromosome" aria-label="Search" id="chr_tags">
-      <script>
-        $(function () {
-            var chrTags = [
-                {% for CHR in chrs %}
-            "{{CHR}}",
-            {% endfor %}
-    ];
-        $("#chr_tags").autocomplete({
-            source: chrTags
-        });
-    } );
-    </script>
-    
-    </div>-->
 
 
   
