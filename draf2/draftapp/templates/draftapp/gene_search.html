@@ -1,6 +1,11 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" href="src/tagcomplete.css">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" 
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" 
+        crossorigin="anonymous"></script>
+<script src="src/tagcomplete.js"></script>
 
 <div class="container">
   <div class = "row h-200">
@@ -9,42 +14,82 @@
   </div>
   <div class = "row input-group text-center">
   <div class="col-2">
-  <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
-  <input class="form-control me-2 d-flex" type="search" name="gene" placeholder="gene" aria-label="Search" id="tags">
-  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  
+  <input type="text" class="tags_input" value="dog,cat,elephant">
+</div>
+</div>
+</div>
+</div>
   
   <script>
-    $(function () {
-        var availableTags = [
-            {% for gene in genes %}
-        "{{gene.genesymbol}}",
-        {% endfor %}
-];
-$("#tags").autocomplete({
-    source: function(request, response) {
-        var results = $.ui.autocomplete.filter(availableTags, request.term);
 
-        response(results.slice(0, 20));
-    }
+$(function(){
+
+$(".tags_input").tagComplete({
+ 
+ autocomplete:{
+         
+         //manual data , it will work together with ajax set
+         const data = [
+      'cow',
+      'goat',
+      'pig',
+      'snake',
+      'hamster',
+      'elephant',
+      'lion',
+      'tiger',
+      'monkey',
+      'lizard',
+      'bird',
+      'crocodile',
+      'gazelle',
+      'antelope'
+],
+         ajaxOpts:{
+           
+   url: '',
+   },
+
+   //ajax query param
+   params: function(value){
+           
+     return {q:value};
+   },
+
+   //proccess data after ajax is complete and send it back to plugin
+   //the data must be an object in the form 
+   //{id:id ,text:text}
+   proccessData: function(data){
+
+       //return the data
+      return data.db_data_array;
+   }//end proccess ajax data
+
+ }//end auto complete 
+  });
+  
 });
-  } );
-</script>
-</div>
-    <div class = "row h-100 mt-5">
-      <div class="col-12 mx-auto">
-        <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
-      </form>
-      </div>
-      </div>
-</div>
-</div>
-</div>
 
-<script>function exemplaryGeneQuery() {
-  document.getElementById('tags').value = "EBF1";
-}</script>
-<button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
+
+
+
+$(".tags_input").tagComplete(
+
+  // when a new tag is added
+  onAdd: function(data){
+    return true;
+  },
+
+  // when a tag is deleted
+  onDelete: function(data){
+    return true;
+  }
+
+});
+
+</script>
+
 
 
 

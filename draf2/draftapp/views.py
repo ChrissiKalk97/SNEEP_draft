@@ -24,29 +24,29 @@ def gwas_search_extended(request):
 
 
 def gene_search(request):
-    genes = Geneannotation.objects.all()
+    gene_obj = Geneannotation.objects.all()
+    genes = []
+    for gene in gene_obj:
+        genes.append(gene.genesymbol)
     return render(request, 'draftapp/gene_search.html', {"genes": genes})
                 
             
 def gene_search_results_snps(request):
     #not so sure whether enhancerxgene is really the type of object to work with for this view...
     if request.method == 'GET':
-        #async with httpx.AsyncClient() as client:
-            #query = await client.get('gene')
-
-        query = request.GET.get('gene')
+        query = request.GET.getlist('gene[]')
         if query:
-            genes = Geneannotation.objects.filter(genesymbol__icontains = query)
+            genes = Geneannotation.objects.filter(genesymbol__in = query)
             gene_dict= {}
             for gene in genes:
                #exs = Enhancersxsnps.objects.filter(enhancerid__targetgene__genesymbol__icontains = gene.genesymbol)
-               snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__icontains = gene.genesymbol)#\
-                #.prefetch_related('Tfsxsnps_rsId').prefetch_related('enhancersxsnpsrsid')
+                snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__icontains = gene.genesymbol)\
+                .prefetch_related('Tfsxsnps_rsId').prefetch_related('enhancersxsnpsrsid')
                #snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__icontains = gene['genesymbol'])\
                 #.prefetch_related('Tfsxsnps_rsId').prefetch_related('enhancersxsnpsrsid')
-               if snps: 
+                if snps: 
                     gene_dict[gene] = snps
-                    # I dont know why this code takes so long, in theory it should be a query object
+                    ## I dont know why this code takes so long, in theory it should be a query object
                     #filter does not invoke database access, only later
                     #maybe the dictionary I create makes this somehow...however snps should still only be a query object
                     #which only gets evaluated once I iterate over it
