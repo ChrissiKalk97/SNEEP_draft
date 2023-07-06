@@ -94,11 +94,11 @@ new MultiSelectTag('chr', {
 
 
 
-<script>function exemplaryGeneQuery() {
+<script>
+function exemplaryGeneQuery() {
   document.getElementById('tags').value = "atherosclerosis";
-  $('#tf').val(["AIRE"]);
-  
-  document.getElementById('chr_tags').value = "chr11";
+  document.getElementById('chr').selectedIndex = 10;
+  document.getElementById('tf').selectedIndex = 1;
 }</script>
 <button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
 {% endblock %}

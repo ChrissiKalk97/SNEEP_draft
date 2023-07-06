@@ -20,7 +20,6 @@
   </script>
   {% if gene_dict %} 
      <h3>Gene query results:</h3> 
- <!-- Everything here does not make the code slow, it is actually the queries performed in the view...-->
    <table id = "table" class = "table table-bordered">
         <thead class = "alert-success">
             <tr>
@@ -41,7 +40,7 @@
             <tr>
               <td>{{gene.genesymbol}}</td>
               <td>{{gene.geneid}}</td>
-              <td><a href="{% url 'draftapp:snps_detail' snp.rsid %}">{{snp.rsid}}</a></td>
+              <td><a href="{% url 'draftapp:snp_detail' snp.rsid %}">{{snp.rsid}}</a></td>
               <td>{{snp.chr}}:{{snp.start}}-{{snp.end}}</td>
               <td>{% for exs in snp.enhancersxsnpsrsid.all %}
                     {% if exs == snp.enhancersxsnpsrsid.last%} 

@@ -9,8 +9,8 @@
   </div>
   <div class = "row input-group text-center">
   <div class="col-2">
-<form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
-  <input class="form-control me-2 d-flex" type="search" name="gene" placeholder="gene" aria-label="Search" id="tags" value="">
+  <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
+  <input class="form-control me-2 d-flex" type="search" name="gene" placeholder="gene" aria-label="Search" id="tags">
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
   
@@ -49,5 +49,3 @@ $("#tags").autocomplete({
 
 
 {% endblock %}
-
-  
