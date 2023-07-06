@@ -22,7 +22,6 @@
       <h4>Query rSNPs of a chromosome:</h2>
       </div>
   </div>
-
   
   
 
@@ -97,8 +96,11 @@ new MultiSelectTag('chr', {
 <script>
 function exemplaryGeneQuery() {
   document.getElementById('tags').value = "atherosclerosis";
-  document.getElementById('chr').selectedIndex = 10;
-  document.getElementById('tf').selectedIndex = 1;
+
+  $('#tf').val(["AIRE", "EBF3", "ZBTB6"]);
+  $('#chr').val(["chr11", "chr12"]);
+  location.reload();
+
 }</script>
 <button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
 {% endblock %}
@@ -106,38 +108,6 @@ function exemplaryGeneQuery() {
 
 
 
-<!-- <input class="form-control me-2 d-flex" type="search" name="transcription_factor" placeholder="transcription factor" aria-label="Search" id="tf_tags">
-  </div>
-  <script>
-    $(function () {
-        var tfTags = [
-            {% for tf in tfs %}
-        "{{tf.name}}",
-        {% endfor %}
-];
-    $("#tf_tags").autocomplete({
-        source: tfTags
-    });
-} );
-</script>
-
-
- <div class="col-4">
-      <input class="form-control me-2 d-flex" type="search" name="chromosome" placeholder="chromosome" aria-label="Search" id="chr_tags">
-      <script>
-        $(function () {
-            var chrTags = [
-                {% for CHR in chrs %}
-            "{{CHR}}",
-            {% endfor %}
-    ];
-        $("#chr_tags").autocomplete({
-            source: chrTags
-        });
-    } );
-    </script>
-    
-    </div>-->
 
 
   
