@@ -24,17 +24,14 @@ def gwas_search_extended(request):
 
 
 def gene_search(request):
-    gene_obj = Geneannotation.objects.all()
-    genes = []
-    for gene in gene_obj:
-        genes.append(gene.genesymbol)
+    genes = Geneannotation.objects.values('genesymbol')
     return render(request, 'draftapp/gene_search.html', {"genes": genes})
                 
             
 def gene_search_results_snps(request):
     #not so sure whether enhancerxgene is really the type of object to work with for this view...
     if request.method == 'GET':
-        query = request.GET.getlist('gene[]')
+        query = request.GET.getlist('genes[]')
         if query:
             genes = Geneannotation.objects.filter(genesymbol__in = query)
             gene_dict= {}
