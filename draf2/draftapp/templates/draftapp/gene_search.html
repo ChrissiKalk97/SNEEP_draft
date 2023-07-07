@@ -16,17 +16,27 @@
     <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
         <select name="genes[]"  id ="genes" class = "genes"  multiple>
         
-         {%for gene in genes.values%}
-          <option value= "{{gene.0}}"> {{gene.0}}</option>
+         {%for gene in values%}
+          <option value= "{{gene}}"> {{gene}}</option>
           {% endfor %}
       </select>
    </div>
+
+   <div class = "row h-100 mt-5">
+    <div class="col-4 mx-auto">
+      <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
+    </form>
+    </div>
+    </div>
+
 </div>
 </div>
 </div>
 
   
 <script>
+  var values = $.map(genes, function(value, key) { return value[genesymbol] });
+  
 
   new MultiSelectTag('genes', {
     rounded: true,    // default true

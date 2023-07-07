@@ -24,7 +24,7 @@ def gwas_search_extended(request):
 
 
 def gene_search(request):
-    genes = Geneannotation.objects.values('genesymbol')
+    genes = Geneannotation.objects.all().values('genesymbol')
     return render(request, 'draftapp/gene_search.html', {"genes": genes})
                 
             
