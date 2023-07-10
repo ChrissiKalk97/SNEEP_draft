@@ -1,49 +1,108 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
-<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
-
 
 <div class="container">
   <div class = "row h-200">
     <div class="col-6">
   <h4>Enter a gene to find associated rSNPs:</h2>
   </div>
-    <div class = "row input-group">
-      <div class="col-4">
-    <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
-        <select name="genes[]"  id ="genes" class = "genes"  multiple>
-        
-         {%for gene in genes%}
-          <option value= "{{gene.genesymbol}}"> {{gene.genesymbol}}</option>
-          {% endfor %}
-      </select>
-   </div>
-
-   <div class = "row h-100 mt-5">
-    <div class="col-4 mx-auto">
-      <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
-    </form>
-    </div>
-    </div>
-
+  <div class = "row input-group text-center">
+  <div class="col-2">
+  <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
+  <input class="form-control me-2 d-flex" type="search" name="genes" placeholder="genes" aria-label="Search" id="gene_input">
 </div>
+<div class = "row h-200">
+  <div class='res'><textarea id="multi" cols="50" rows="2"></textarea></div>
 </div>
-</div>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
   
-<script>
+  <script>
+    let gene_list = [];
+    $(function () {
+        var availableTags = [
+            {% for gene in genes %}
+        "{{gene.genesymbol}}",
+        {% endfor %}
+];
+ 
 
-  new MultiSelectTag('genes', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'genes',  // default Search...
-})
+$("#gene_input").autocomplete({
+    source: function(request, response) {
+        var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+        response(results.slice(0, 20));},
+
+        select: function(event, ui) {
+        let a = $('#multi').val().split(",");
+        a.push(ui.item.value)
+        $('#multi').val(a.filter(x => x).join(","));
+        return false;
+  },
+        
+ });
+});
+
+
+
+
+  /*function add(gene) {
+    gene_list.push(gene.value);      
+    console.log(gene_list);
+};*/
+
+function remove_gene(gene) {
+        gene_index = gene_list.findIndex(gene);    
+        if (gene_index != -1){
+          gene_list.splice(gene_index, 1) 
+        }
+       
+};
+
+
+
+let gene_search = $('#multi').val().split(",");
+
+const input = document.querySelector("input");
+input.addEventListener("change", updateValue);
+
+function updateValue(e) {
+  input.textContent = gene_search;
+}
+
 
 </script>
+</div>
+<div class="col-2">
+  {% for gene in gene_search %}
+ <div>
+  <button onclick="remove_gene(gene)">x</button>
+  {{gene}}
+</div>
+  {% endfor %}
+</div>
+    <div class = "row h-100 mt-5">
+      <div class="col-12 mx-auto">
+        <button class="btn d-flex" style="background-color: #00CED1;" type="submit" >Search</button>
+      </form>
+      </div>
+      </div>
+</div>
+</div>
+</div>
 
+<script>function fillGenes() {
+  document.getElementById('gene_input').value = $('#multi').val().split(",");
+  console.log(document.getElementById('gene_input').value.split(","));
+}</script>
+<button type="button" class='ajax_search_list' id="fill_genes" onclick="fillGenes()">fillGenes</button>
+
+
+<script>function exemplaryGeneQuery() {
+  document.getElementById('gene_input').value = "EBF1, FOSB";
+}</script>
+<button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
 
 
 

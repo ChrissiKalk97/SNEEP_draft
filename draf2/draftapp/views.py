@@ -31,7 +31,8 @@ def gene_search(request):
 def gene_search_results_snps(request):
     #not so sure whether enhancerxgene is really the type of object to work with for this view...
     if request.method == 'GET':
-        query = request.GET.getlist('genes[]')
+        query = request.GET.get('genes')
+        query = query.split(",")
         if query:
             genes = Geneannotation.objects.filter(genesymbol__in = query)
             gene_dict= {}
