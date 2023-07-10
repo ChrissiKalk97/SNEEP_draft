@@ -16,8 +16,8 @@
     <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
         <select name="genes[]"  id ="genes" class = "genes"  multiple>
         
-         {%for gene in values%}
-          <option value= "{{gene}}"> {{gene}}</option>
+         {%for gene in genes%}
+          <option value= "{{gene.genesymbol}}"> {{gene.genesymbol}}</option>
           {% endfor %}
       </select>
    </div>
@@ -35,8 +35,6 @@
 
   
 <script>
-  var values = $.map(genes, function(value, key) { return value[genesymbol] });
-  
 
   new MultiSelectTag('genes', {
     rounded: true,    // default true
