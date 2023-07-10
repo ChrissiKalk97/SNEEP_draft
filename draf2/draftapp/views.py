@@ -37,17 +37,17 @@ def gene_search_results_snps(request):
             genes = Geneannotation.objects.filter(genesymbol__in = query)
             gene_dict= {}
             for gene in genes:
-               #exs = Enhancersxsnps.objects.filter(enhancerid__targetgene__genesymbol__icontains = gene.genesymbol)
-                snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__icontains = gene.genesymbol)\
-                .prefetch_related('Tfsxsnps_rsId').prefetch_related('enhancersxsnpsrsid')
-               #snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__icontains = gene['genesymbol'])\
-                #.prefetch_related('Tfsxsnps_rsId').prefetch_related('enhancersxsnpsrsid')
+                
+                snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__exact = gene.genesymbol).distinct().values("rsid", "chr", "start", "end")
+                snps_rsid = [rsnp["rsid"] for rsnp in snps]
+                tfs = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("tfid", "rsid", "efoid")
+                exs = Enhancersxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
+                gwas = []
+                for tf in tfs:
+                    gwas += tf["efoid"]
                 if snps: 
-                    gene_dict[gene] = snps
-                    ## I dont know why this code takes so long, in theory it should be a query object
-                    #filter does not invoke database access, only later
-                    #maybe the dictionary I create makes this somehow...however snps should still only be a query object
-                    #which only gets evaluated once I iterate over it
+                    gene_dict[gene] = [snps, tfs, exs, gwas]
+
             return render(request, 'draftapp/gene_search_results_snps.html', {'gene_dict': gene_dict})
         else:
                 raise Http404("The given gene cannot be found")

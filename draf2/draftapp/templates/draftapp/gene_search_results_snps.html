@@ -35,8 +35,8 @@
         </thead>
         <tbody>
           
-          {% for gene, snps in gene_dict.items %}
-            {% for snp in snps %}
+          {% for gene, list_per_snp in gene_dict.items %}
+            {% for snp in list_per_snp.0 %}
             <tr>
               <td>{{gene.genesymbol}}</td>
               <td>{{gene.geneid}}</td>
