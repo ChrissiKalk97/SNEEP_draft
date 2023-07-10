@@ -60,6 +60,10 @@ def snp_search(request):
     snps = Snps.objects.all()
     return render(request, 'draftapp/snp_search.html', {"snps": snps})
 
+class SnpsDetailView(generic.DetailView):
+    model = Snps
+    template_name = 'draftapp/snps_detail.html' 
+
 def snp_search_results(request):
     if request.method == 'GET':
         query = request.GET.get('rSNP')
