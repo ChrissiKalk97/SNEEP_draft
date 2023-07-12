@@ -14,6 +14,9 @@
 </div>
 <div class = "row h-200">
   <div class='res'><textarea id="multi" cols="50" rows="2"></textarea></div>
+  {% for sel_gene in gene_list %}
+       <button> {{sel_gene}} </button>
+        {% endfor %}
 </div>
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -26,7 +29,8 @@
         "{{gene.genesymbol}}",
         {% endfor %}
 ];
- 
+
+
 
 $("#gene_input").autocomplete({
     source: function(request, response) {
@@ -37,7 +41,9 @@ $("#gene_input").autocomplete({
         select: function(event, ui) {
         let a = $('#multi').val().split(",");
         a.push(ui.item.value)
+        gene_list.push(ui.item.value)
         $('#multi').val(a.filter(x => x).join(","));
+        document.getElementById('gene_input').value = "";
         return false;
   },
         
@@ -50,7 +56,7 @@ $("#gene_input").autocomplete({
   /*function add(gene) {
     gene_list.push(gene.value);      
     console.log(gene_list);
-};*/
+};
 
 function remove_gene(gene) {
         gene_index = gene_list.findIndex(gene);    
@@ -69,7 +75,7 @@ input.addEventListener("change", updateValue);
 
 function updateValue(e) {
   input.textContent = gene_search;
-}
+}*/
 
 
 </script>
@@ -84,7 +90,7 @@ function updateValue(e) {
 </div>
     <div class = "row h-100 mt-5">
       <div class="col-12 mx-auto">
-        <button class="btn d-flex" style="background-color: #00CED1;" type="submit" >Search</button>
+        <button class="btn d-flex" style="background-color: #00CED1;" type="submit" onclick="fillGenes()">Search</button>
       </form>
       </div>
       </div>
@@ -96,11 +102,11 @@ function updateValue(e) {
   document.getElementById('gene_input').value = $('#multi').val().split(",");
   console.log(document.getElementById('gene_input').value.split(","));
 }</script>
-<button type="button" class='ajax_search_list' id="fill_genes" onclick="fillGenes()">fillGenes</button>
+
 
 
 <script>function exemplaryGeneQuery() {
-  document.getElementById('gene_input').value = "EBF1, FOSB";
+  document.getElementById('multi').value = "EBF1,OGFOD2,MIR4304,SLC17A4,LINC01111,FOSB";
 }</script>
 <button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
 
