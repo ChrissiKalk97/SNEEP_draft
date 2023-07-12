@@ -13,10 +13,9 @@
   <input class="form-control me-2 d-flex" type="search" name="genes" placeholder="genes" aria-label="Search" id="gene_input">
 </div>
 <div class = "row h-200">
-  <div class='res'><textarea id="multi" cols="50" rows="2"></textarea></div>
-  {% for sel_gene in gene_list %}
-       <button> {{sel_gene}} </button>
-        {% endfor %}
+  <ul id = "gene_list">
+  </ul>
+  
 </div>
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -39,10 +38,16 @@ $("#gene_input").autocomplete({
         response(results.slice(0, 20));},
 
         select: function(event, ui) {
-        let a = $('#multi').val().split(",");
-        a.push(ui.item.value)
-        gene_list.push(ui.item.value)
-        $('#multi').val(a.filter(x => x).join(","));
+        /*let a = $('#multi').val().split(",");
+        a.push(ui.item.value);*/
+        gene_list.push(ui.item.value);
+        console.log(gene_list);
+        let list = document.getElementById("gene_list");
+        let li = document.createElement('button');
+        li.classList.add("gene_button");
+        li.innerText = gene_list.slice(-1);
+        list.appendChild(li);
+        /*$('#multi').val(a.filter(x => x).join(","));*/
         document.getElementById('gene_input').value = "";
         return false;
   },
@@ -51,33 +56,14 @@ $("#gene_input").autocomplete({
 });
 
 
+$(document).ready(function(){
+  
+  $('button.gene_button').button();
+});
 
-
-  /*function add(gene) {
-    gene_list.push(gene.value);      
-    console.log(gene_list);
-};
-
-function remove_gene(gene) {
-        gene_index = gene_list.findIndex(gene);    
-        if (gene_index != -1){
-          gene_list.splice(gene_index, 1) 
-        }
-       
-};
-
-
-
-let gene_search = $('#multi').val().split(",");
-
-const input = document.querySelector("input");
-input.addEventListener("change", updateValue);
-
-function updateValue(e) {
-  input.textContent = gene_search;
-}*/
-
-
+$('button.gene_button').click(function() {
+  alert('hohoho');
+});
 </script>
 </div>
 <div class="col-2">
@@ -99,7 +85,7 @@ function updateValue(e) {
 </div>
 
 <script>function fillGenes() {
-  document.getElementById('gene_input').value = $('#multi').val().split(",");
+  document.getElementById('gene_input').value = gene_list;
   console.log(document.getElementById('gene_input').value.split(","));
 }</script>
 
@@ -110,6 +96,10 @@ function updateValue(e) {
 }</script>
 <button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example Query</button>
 
-
+<style>
+  .gene_button{
+    background: #CCFFFF;
+  }
+</style>
 
 {% endblock %}
