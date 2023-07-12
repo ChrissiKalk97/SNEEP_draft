@@ -40,21 +40,23 @@ $("#gene_input").autocomplete({
         response(results.slice(0, 20));},
 
         select: function(event, ui) {
-        /*let a = $('#multi').val().split(",");
-        a.push(ui.item.value);*/
         gene_list.push(ui.item.value);
         console.log(gene_list);
         let list = document.getElementById("gene_list");
+        let group = document.createElement('btn-group');
         let li = document.createElement('button');
+        let x = document.createElement('button');
         li.classList.add("gene_button");
         li.innerText = gene_list.slice(-1);
+        x.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>';
         const isThisElement = (element) => element == li.innerText;
         li.onclick = function(){gene_index = gene_list.findIndex(isThisElement);    
         if (gene_index != -1){
           gene_list.splice(gene_index, 1) 
         }; li.remove(); };
-        list.appendChild(li);
-        /*$('#multi').val(a.filter(x => x).join(","));*/
+        group.appendChild(li);
+        group.appendChild(x);
+        list.appendChild(group);
         document.getElementById('gene_input').value = "";
         return false;
   },
@@ -66,12 +68,7 @@ $("#gene_input").autocomplete({
 </script>
 </div>
 <div class="col-2">
-  {% for gene in gene_search %}
- <div>
-  <button onclick="remove_gene(gene)">x</button>
-  {{gene}}
-</div>
-  {% endfor %}
+  
 </div>
     <div class = "row h-100 mt-5">
       <div class="col-12 mx-auto">
@@ -98,7 +95,14 @@ $("#gene_input").autocomplete({
 <style>
   .gene_button{
     background: #CCFFFF;
+    
   }
+  .btn-group{
+    border: #1df5f5;
+  }
+
+
+
 </style>
 
 {% endblock %}
