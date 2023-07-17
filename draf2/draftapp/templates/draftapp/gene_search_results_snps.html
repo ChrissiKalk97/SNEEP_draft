@@ -35,36 +35,18 @@
         </thead>
         <tbody>
           
-          {% for gene, snps in gene_dict.items %}
-            {% for snp in snps %}
+          {% for gene, list_per_gene in gene_dict.items %}
+            {% for snp_list in list_per_gene %}
             <tr>
               <td>{{gene.genesymbol}}</td>
               <td>{{gene.geneid}}</td>
-              <td><a href="{% url 'draftapp:snp_detail' snp.rsid %}">{{snp.rsid}}</a></td>
-              <td>{{snp.chr}}:{{snp.start}}-{{snp.end}}</td>
-              <td>{% for exs in snp.enhancersxsnpsrsid.all %}
-                    {% if exs == snp.enhancersxsnpsrsid.last%} 
-                      {{exs.efoid.efoid.name}}
-                    {% else %} 
-                      {{exs.efoid.efoid.name}}, 
-                    {% endif %}
-                  {% endfor %}
+              <td><a href="{% url 'draftapp:snp_detail' snp_list.0 %}">{{snp_list.0}}</a></td>
+              <td>{{snp_list.1}}</td>
+              <td>{{snp_list.3}}
                 </td>
-                <td>{% for exs in snp.enhancersxsnpsrsid.all %}
-                      {% if exs == snp.enhancersxsnpsrsid.last%} 
-                        {{exs.enhancerid.enhancerid}}
-                      {% else %} 
-                        {{exs.enhancerid.enhancerid}}, 
-                      {% endif %}
-                    {% endfor %}
+                <td>{{snp_list.4}}
                   </td>
-              <td>{% for tfsXsnp in snp.Tfsxsnps_rsId.all %}
-                    {% if tfsXsnp == snp.Tfsxsnps_rsId.last%} 
-                      {{tfsXsnp.tfid.name}}
-                    {% else %} 
-                      {{tfsXsnp.tfid.name}}, 
-                    {% endif %}
-                  {% endfor %}
+              <td>{{snp_list.2}}
               </td>
             </tr>
                
