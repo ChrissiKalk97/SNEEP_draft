@@ -120,36 +120,34 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
 def gwas_search_results_dict_2(request):
      if request.method == 'GET':
         gwas = request.GET.getlist('gwas[]')
-        tf = []
-        for transcription_factor in request.GET.getlist('tf[]'):
-            tf.append(transcription_factor)
+        tf =  request.GET.getlist('tf[]')
         chromosome = request.GET.getlist('chromosome[]')
         if gwas:
-            gwas_info = Gwasinfo.objects.filter(name__in = gwas)
+            gwas_info = Gwasinfo.objects.filter(name__in = gwas).values("name")
+            snp_dict_complete = {}
             for gwas_trait in gwas_info:
                 snp_dict = {}
                 if tf and chromosome:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait.name) & \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
                                                         Q(Tfsxsnps_rsId__tfid__name__in = tf) & Q(chr__in = chromosome)).distinct()\
-                                                         .values()
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait.name)    
+                                                         .values("rsid", "chr", "start", "end")
+                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])    
                 elif chromosome:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait.name) & \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
                                                         Q(chr__in = chromosome)).distinct()\
-                                                         .only("rsid", "chr", "start", "end").values()
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait.name)
+                                                         .values("rsid", "chr", "start", "end")
+                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
                 elif tf:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait.name) & \
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
                                                         Q(Tfsxsnps_rsId__tfid__name__in = tf)).distinct()\
-                                                         .only("rsid", "chr", "start", "end").values()
+                                                         .values("rsid", "chr", "start", "end")
                     
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait.name)
+                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
                 else:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait.name)) \
-                                                      .distinct().only("rsid", "chr", "start", "end").values()
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait.name)
-                return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict})
-            else:
-                raise Http404("The given GWAS trait cannot be found")
+                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"])) \
+                                                      .distinct().values("rsid", "chr", "start", "end")
+                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
+                snp_dict_complete[gwas_trait["name"]] = snp_dict
+            return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
         else:
                 raise Http404("No GWAS given")

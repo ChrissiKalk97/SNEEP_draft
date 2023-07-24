@@ -46,11 +46,11 @@
     </tr>
   </thead>
   <tbody>
-
-    {% for snp, values in snp_dict.items %}
+    {% for gwas, snp_values in snp_dict.items %}
+    {% for snp, values in snp_values.items %}
 
     <tr>
-      <td>{{values.5}}</td>
+      <td>{{gwas}}</td>
       <td><a href="{% url 'draftapp:snp_detail' snp %}">{{snp}} </a></td>
       <td>{{values.0}}</td>
       <td>{{values.1}}</td>
@@ -59,6 +59,7 @@
       <td>{{values.4}}</td>
     </tr>
 
+    {% endfor %}
     {% endfor %}
   </tbody>
 </table>
