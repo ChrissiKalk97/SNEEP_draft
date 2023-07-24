@@ -91,27 +91,16 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
     exs = Enhancersxsnps.objects.filter(rsid__rsid__in = snps).values("enhancerid", "rsid")
     for snp in snps_unique:
         snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", "", gwas]
-        for tf in tfs:
-            if tf["rsid"] == snp["rsid"]:
-                snp_dict[snp["rsid"]][1] += tf["tfid"]+", "
-        #for gene in genes:
-            #snp_dict[snp["rsid"]][2] += gene["genesymbol"]+", "
-            #snp_dict[snp["rsid"]][3] += gene["geneid"]+", "
-        for ex in exs:
-            if ex["rsid"] == snp["rsid"]:
-                snp_dict[snp["rsid"]][4] += ex["enhancerid"]+", "
-    
+        snp_dict[snp["rsid"]][1] = ", ".join([tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]])
+        snp_dict[snp["rsid"]][4] = ", ".join([ex["enhancerid"] for ex in exs if ex["rsid"] == snp["rsid"]])
+        #snp_dict[snp["rsid"]][2] = ", ".join([gene["genesymbol"] for gene in genes if gene["rsid"] == snp["rsid"]])
+        #snp_dict[snp["rsid"]][3] = ", ".join([gene["geneid"] for gene in genes if gene["rsid"] == snp["rsid"]])
+            
         
     for snp, info in snp_dict.items():
-        if snp_dict[snp][1] != "":
-            snp_dict[snp][1] = info[1][:-2]
-        else:
+        if info[1] == "":
             snp_dict[snp][1] = "Unknown"
-        if snp_dict[snp][4] != "":
-            snp_dict[snp][2] = info[2][:-2]
-            snp_dict[snp][3] = info[3][:-2]
-            snp_dict[snp][4] = info[4][:-2]
-        else:
+        if info[4] == "":
             snp_dict[snp][2] = "Unknown"
             snp_dict[snp][3] = "Unknown"
             snp_dict[snp][4] = "Unknown"
