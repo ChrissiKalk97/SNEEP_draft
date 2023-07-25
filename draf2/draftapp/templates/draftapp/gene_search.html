@@ -13,92 +13,101 @@
           <input class="form-control me-2 d-flex" type="search" name="genes" placeholder="genes" aria-label="Search"
             id="gene_input">
       </div>
-      <div class="row h-200">
+
+      <div class="col-10 float-right">
         <ul id="gene_list">
         </ul>
-
-      </div>
-      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-      <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-        integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
-      <script>
-        function makeButtonGroup(genename, list) {
-          let group = document.createElement('btn-group');
-          let li = document.createElement('button');
-          let x = document.createElement('button');
-          li.classList.add("gene_button");
-          li.innerText = genename;
-          x.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>';
-          const isThisElement = (element) => element == li.innerText;
-          x.onclick = function () {
-            gene_index = gene_list.findIndex(isThisElement);
-            if (gene_index != -1) {
-              gene_list.splice(gene_index, 1)
-            };
-            li.remove();
-            x.remove();
-          };
-          group.appendChild(li);
-          group.appendChild(x);
-          list.appendChild(group);
-
-        };
-      </script>
-
-      <script>
-        let gene_list = [];
-        $(function () {
-          var availableTags = [
-            {% for gene in genes %}
-            "{{gene.genesymbol}}",
-          {% endfor %}
-    ];
-
-        $("#gene_input").autocomplete({
-          source: function (request, response) {
-            var results = $.ui.autocomplete.filter(availableTags, request.term);
-
-            response(results.slice(0, 20));
-          },
-
-          select: function (event, ui) {
-            gene_list.push(ui.item.value);
-            console.log(gene_list);
-            let list = document.getElementById("gene_list");
-            makeButtonGroup(gene_list.slice(-1), list);
-            document.getElementById('gene_input').value = "";
-            return false;
-          },
-
-        });
-    });
-      </script>
-
-    </div>
-    <div class="col-2">
-
-    </div>
-    <div class="row h-100 mt-5">
-      <div class="col-12 mx-auto">
-        <button class="btn d-flex" style="background-color: #00CED1;" type="submit"
-          onclick="fillGenes()">Search</button>
-        </form>
       </div>
     </div>
   </div>
+
+  <div class="row h-100 mt-5">
+    <div class="col-md">
+      <button class="btn d-flex" style="background-color: #00CED1;" type="submit" onclick="fillGenes()">Search</button>
+      </form>
+    </div>
+
+    <div class="col-md">
+      <button class="btn col-xs-1 float-right" style="background-color: #00CED1;" type="submit"
+        onclick="deleteGenes()">Delete Genes</button>
+    </div>
+  </div>
 </div>
-</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<script>
+  function makeButtonGroup(genename, list) {
+    let group = document.createElement('btn-group');
+    let li = document.createElement('button');
+    let x = document.createElement('button');
+    li.classList.add("gene_button");
+    li.innerText = genename;
+    x.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>';
+    const isThisElement = (element) => element == li.innerText;
+    x.onclick = function () {
+      gene_index = gene_list.findIndex(isThisElement);
+      if (gene_index != -1) {
+        gene_list.splice(gene_index, 1)
+      };
+      li.remove();
+      x.remove();
+    };
+    group.appendChild(li);
+    group.appendChild(x);
+    list.appendChild(group);
+
+  };
+</script>
+
+<script>
+  let gene_list = [];
+  $(function () {
+    var availableTags = [
+      {% for gene in genes %}
+            "{{gene.genesymbol}}",
+    {% endfor %}
+    ];
+
+  $("#gene_input").autocomplete({
+    source: function (request, response) {
+      var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+      response(results.slice(0, 20));
+    },
+
+    select: function (event, ui) {
+      gene_list.push(ui.item.value);
+      console.log(gene_list);
+      let list = document.getElementById("gene_list");
+      makeButtonGroup(gene_list.slice(-1), list);
+      document.getElementById('gene_input').value = "";
+      return false;
+    },
+
+  });
+    });
+</script>
+
 
 <script>function fillGenes() {
+    document.getElementById('gene_input').innerText = "";
     document.getElementById('gene_input').value = gene_list;
-    console.log(document.getElementById('gene_input').value.split(","));
   }</script>
 
+<script>function deleteGenes() {
+    document.getElementById("gene_list").innerHTML = "";
+    gene_list = [];
+    document.getElementById('gene_input').value = "";
+  }</script>
 
 
 <script>function exemplaryGeneQuery() {
     gene_list = ["EBF1", "OGFOD2", "MIR4304", "SLC17A4", "LINC01111", "FOSB"];
-    console.log(gene_list);
     let list = document.getElementById("gene_list");
     for (const gene of gene_list.values()) {
       makeButtonGroup(gene, list);
