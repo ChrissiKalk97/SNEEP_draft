@@ -120,7 +120,7 @@ def gwas_search_results_dict_2(request):
         tf =  request.GET.getlist('tf[]')
         chromosome = request.GET.getlist('chromosome[]')
         if gwas:
-            gwas_info = Gwasinfo.objects.filter(Q(name__in = gwas) | Q(efoid__in = gwas)).distinct().values("name")
+            gwas_info = Gwasinfo.objects.filter(Q(name__in = gwas) | Q(efoid__in = gwas)).distinct().values("name", "efoid")
             snp_dict_complete = {}
             for gwas_trait in gwas_info:
                 snp_dict = {}
@@ -144,7 +144,8 @@ def gwas_search_results_dict_2(request):
                     snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"])) \
                                                       .distinct().values("rsid", "chr", "start", "end")
                     snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
-                snp_dict_complete[gwas_trait["name"]] = snp_dict
+                gwas_key = gwas_trait["name"]+", "+gwas_trait["efoid"]
+                snp_dict_complete[gwas_key] = snp_dict
             return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
         else:
                 raise Http404("No GWAS given")

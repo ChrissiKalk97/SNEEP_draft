@@ -1,5 +1,6 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
+{% load filter_tags %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
@@ -37,6 +38,7 @@
   <thead class="alert-success">
     <tr>
       <th>GWAS trait</th>
+      <th>EFO ID of GWAS trait</th>
       <th>rSNP</th>
       <th>Chromosome:Start-End</th>
       <th>TF</th>
@@ -50,7 +52,10 @@
     {% for snp, values in snp_values.items %}
 
     <tr>
-      <td>{{gwas}}</td>
+      {% with gwas|split:", " as gwasInfo %}
+      <td>{{gwasInfo.0}}</td>
+      <td><a href="https://www.ebi.ac.uk/gwas/efotraits/{{gwasInfo.1}}">{{gwasInfo.1}}</a></td>
+      {% endwith %}
       <td><a href="{% url 'draftapp:snp_detail' snp %}">{{snp}} </a></td>
       <td>{{values.0}}</td>
       <td>{{values.1}}</td>
