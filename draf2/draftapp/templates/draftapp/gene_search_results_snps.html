@@ -19,7 +19,11 @@
 
 </script>
 {% if gene_dict %}
-<h3>Gene query results:</h3>
+<h4>Gene query results:</h4>
+<p>&nbsp;</p>
+<h5>For the following genes no match in the SNEEP database was found: {{ no_hits }}</h5>
+<h5>The following genes were found in the SNEEP database and the results are shown in the table below: {{ hits }}
+</h5>
 <table id="table" class="table table-bordered">
   <thead class="alert-success">
     <tr>

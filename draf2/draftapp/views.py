@@ -33,11 +33,14 @@ def gene_search_results_snps(request):
         query = request.GET.get('genes')
         query = query.split(",")
         if query:
+            no_hits = []#genes for which no coresponding snps etc are found
+            hits = []#successfull genes
             genes = Geneannotation.objects.filter(genesymbol__in = query)
             gene_dict= {}
             for gene in genes:
                 snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__exact = gene.genesymbol).distinct().values("rsid", "chr", "start", "end")
                 if snps: 
+                    hits.append(gene.genesymbol)
                     snps_rsid = [rsnp["rsid"] for rsnp in snps]
                     tfs = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("tfid", "rsid", "efoid")
                     exs = Enhancersxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
@@ -56,7 +59,11 @@ def gene_search_results_snps(request):
                         list_per_gene.append([snp["rsid"], snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]), tf_string, gwas_string,\
                                             exs_string, efoid_list])
                     gene_dict[gene] = list_per_gene
-            return render(request, 'draftapp/gene_search_results_snps.html', {'gene_dict': gene_dict})
+                else:
+                    no_hits.append(gene.genesymbol)
+            no_hits = ", ".join(no_hits)
+            hits = ", ".join(hits)
+            return render(request, 'draftapp/gene_search_results_snps.html', {'gene_dict': gene_dict, "no_hits": no_hits, "hits": hits})
         else:
                 raise Http404("The given gene cannot be found")
     else:
