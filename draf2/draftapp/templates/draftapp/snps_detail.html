@@ -2,74 +2,69 @@
 
 
 {% block title %}
-    <title>SNP Detail page </title>
+<title>SNP Detail page </title>
 {% endblock %}
 
 {% block body %}
-{% if object %} 
+{% if object %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" type= "text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-  <script type = "text/javascript">
-    $(document).ready(function(){
-        $('#table').DataTable();
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, 'All'],
-          ];
-    });
-  </script>
-  
-      <h3>Details about rSNP {{ object.rsid }} </h3> 
-      <h5>rSNP {{ object.rsid }} is found in the follwoing enhancers:  </h5> 
-      {% for exs in object.enhancersxsnpsrsid.all%}
-          {% if exs == object.enhancersxsnpsrsid.last%}
-              {{exs.enhancerid.enhancerid}}
-            {% else %}
-              {{exs.enhancerid.enhancerid}}, 
-            {% endif %}
-      {% endfor %}
-     <p>rSNP {{ object.rsid }} is placed on {{object.chr}} starting at position {{object.start}}</p>
-      
-      <table id = "table" class = "table table-bordered">
-        <thead class = "alert-success">
-            <tr>
-              <th>TF</th>
-              <th>WT allele</th>
-              <th>Variant</th>
-              <th>Strand</th>
-              <th>Position in REM</th>
-              <th>Effect on binding site</th>
-              <th>Dmax value</th>
-              <th>Adjusted p-value</th>
-            </tr>
-        </thead>
-        <tbody>
-          
-          {% for tfxsnp in object.Tfsxsnps_rsId.all%}
-            <tr>
-              <td>{{tfxsnp.tfid.name}}</td>
-              <td>{{tfxsnp.allele1}}</td>
-              <td>{{tfxsnp.allele2}}</td>
-              <td>{{tfxsnp.strand}}</td>
-              <td>{{tfxsnp.posinmotif}}</td>
-              <td>{%if tfxsnp.diffbindpvalue < 0 %}
-                  creates
-                  {%elif tfxsnp.diffbindpvalue > 0 %}
-                  disrupts
-                  {% endif%}
-              </td>
-              <td>{{tfxsnp.diffbindpvalue}}</td>
-              <td>{{tfxsnp.adjustedpvalue}}</td>
-            </tr>
-          {% endfor %}
-            
-        </tbody>
-    </table>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#table').DataTable();
+    lengthMenu: [
+      [10, 25, 50, -1],
+      [10, 25, 50, 'All'],
+    ];
+  });
+</script>
 
-  {% else %}
-      <h3>This SNP is not investigated by us!</h3>
-  {% endif %}
+<h3>Details about rSNP {{ object.rsid }} </h3>
+<h5>rSNP {{ object.rsid }} is found in the follwoing enhancers: </h5>
+{% for exs in object.enhancersxsnpsrsid.all%}
+{% if exs == object.enhancersxsnpsrsid.last%}
+{{exs.enhancerid.enhancerid}}
+{% else %}
+{{exs.enhancerid.enhancerid}},
+{% endif %}
+{% endfor %}
+<p>rSNP {{ object.rsid }} is placed on {{object.chr}} starting at position {{object.start}}</p>
+
+<table id="table" class="table table-bordered">
+  <thead class="alert-success">
+    <tr>
+      <th>TF</th>
+      <th>WT allele</th>
+      <th>Variant</th>
+      <th>Strand</th>
+      <th>Position in REM</th>
+      <th>Effect on binding site</th>
+      <th>Dmax value</th>
+      <th>P-value</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for tfxsnp in object.Tfsxsnps_rsId.all%}
+    <tr>
+      <td>{{tfxsnp.tfid.name}}</td>
+      <td>{{tfxsnp.allele1}}</td>
+      <td>{{tfxsnp.allele2}}</td>
+      <td>{{tfxsnp.strand}}</td>
+      <td>{{tfxsnp.posinmotif}}</td>
+      <td>{% if tfxsnp.diffbindpvalue < 0 %} creates {% else %} disrupts {% endif %} </td>
+      <td>{{tfxsnp.diffbindpvalue}}</td>
+      <td>{{tfxsnp.adjustedpvalue}}</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+{% else %}
+<h3>This SNP is not investigated by us!</h3>
+{% endif %}
 {% endblock %}
 
 
@@ -77,21 +72,13 @@
 
 
 {% if snp.Tfsxsnps_rsId.all%}
-                      {% for tfsxsnp in snp.Tfsxsnps_rsId.all%}
-                        {% if tfsxsnp == snp.Tfsxsnps_rsId.last%}
-                          {{tfsxsnp.tfid.name}}
-                        {% else %}
-                          {{tfsxsnp.tfid.name}}, 
-                        {% endif %}
-                      {% endfor %}
-                    {% else %}
-                      Unknown
-                    {% endif %}<!--not sure whether unknown is needed here...-->
-
-
-
-
-
-
-   
-   
+{% for tfsxsnp in snp.Tfsxsnps_rsId.all%}
+{% if tfsxsnp == snp.Tfsxsnps_rsId.last%}
+{{tfsxsnp.tfid.name}}
+{% else %}
+{{tfsxsnp.tfid.name}},
+{% endif %}
+{% endfor %}
+{% else %}
+Unknown
+{% endif %}<!--not sure whether unknown is needed here...-->
