@@ -120,7 +120,7 @@ def gwas_search_results_dict_2(request):
         tf =  request.GET.getlist('tf[]')
         chromosome = request.GET.getlist('chromosome[]')
         if gwas:
-            gwas_info = Gwasinfo.objects.filter(name__in = gwas).values("name")
+            gwas_info = Gwasinfo.objects.filter(Q(name__in = gwas) | Q(efoid__in = gwas)).distinct().values("name")
             snp_dict_complete = {}
             for gwas_trait in gwas_info:
                 snp_dict = {}
