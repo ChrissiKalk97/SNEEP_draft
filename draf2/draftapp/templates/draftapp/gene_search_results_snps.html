@@ -1,67 +1,71 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" type= "text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-  <script type = "text/javascript">
-    $(document).ready(function(){
-        $('#table').DataTable({
-          dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-        });
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, 'All'],
-          ];
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#table').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
     });
-    
-  </script>
-  {% if gene_dict %} 
-     <h3>Gene query results:</h3> 
-   <table id = "table" class = "table table-bordered">
-        <thead class = "alert-success">
-            <tr>
-              <th>Gene name</th>
-              <th>Ensembl id</th>
-              <th>associated rSNP</th>
-              <th>rSNP position</th>
-              <th>GWAS traits associated to rSNPs</th>
-              <th>Enhancers</th>
-              <th>Transcription factors</th>
-              
-            </tr>
-        </thead>
-        <tbody>
-          
-          {% for gene, list_per_gene in gene_dict.items %}
-            {% for snp_list in list_per_gene %}
-            <tr>
-              <td>{{gene.genesymbol}}</td>
-              <td>{{gene.geneid}}</td>
-              <td><a href="{% url 'draftapp:snp_detail' snp_list.0 %}">{{snp_list.0}}</a></td>
-              <td>{{snp_list.1}}</td>
-              <td>{{snp_list.3}}
-                </td>
-                <td>{{snp_list.4}}
-                  </td>
-              <td>{{snp_list.2}}
-              </td>
-            </tr>
-               
-            {% endfor %}
-          {% endfor %}
-        </tbody>
-    </table>
-  
+    lengthMenu: [
+      [10, 25, 50, -1],
+      [10, 25, 50, 'All'],
+    ];
+  });
+
+</script>
+{% if gene_dict %}
+<h3>Gene query results:</h3>
+<table id="table" class="table table-bordered">
+  <thead class="alert-success">
+    <tr>
+      <th>Gene name</th>
+      <th>Ensembl id</th>
+      <th>associated rSNP</th>
+      <th>rSNP position</th>
+      <th>GWAS traits associated to rSNPs</th>
+      <th>efoIDs of GWAS traits</th>
+      <th>Enhancers</th>
+      <th>Transcription factors</th>
+
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for gene, list_per_gene in gene_dict.items %}
+    {% for snp_list in list_per_gene %}
+    <tr>
+      <td>{{gene.genesymbol}}</td>
+      <td>{{gene.geneid}}</td>
+      <td><a href="{% url 'draftapp:snp_detail' snp_list.0 %}">{{snp_list.0}}</a></td>
+      <td>{{snp_list.1}}</td>
+      <td>{{snp_list.3}}
+      </td>
+      <td>{% for efoid in snp_list.5%}
+        <a href="https://www.ebi.ac.uk/gwas/efotraits/{{efoid}}">{{efoid}}</a>
+        {% endfor %}
+      </td>
+      <td>{{snp_list.4}}
+      </td>
+      <td>{{snp_list.2}}
+      </td>
+    </tr>
+
+    {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
 
 
 
-  {% else %}
-      <h3>This Gene is not investigated by us!</h3>
-  {% endif %}
-  
+
+{% else %}
+<h3>This Gene is not investigated by us!</h3>
+{% endif %}
+
 
 {% endblock %}
-

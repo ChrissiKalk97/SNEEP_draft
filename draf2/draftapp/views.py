@@ -29,7 +29,6 @@ def gene_search(request):
                 
             
 def gene_search_results_snps(request):
-    #not so sure whether enhancerxgene is really the type of object to work with for this view...
     if request.method == 'GET':
         query = request.GET.get('genes')
         query = query.split(",")
@@ -47,13 +46,15 @@ def gene_search_results_snps(request):
                         tf_list = [tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]]
                         tf_string = ", ".join(tf_list)
                         gwas_list = [tf["efoid"] for tf in tfs if tf["rsid"] == snp["rsid"]]
-                        gwases = Gwasinfo.objects.filter(Q(efoid__in = gwas_list)).distinct().values("name")
+                        gwases = Gwasinfo.objects.filter(Q(efoid__in = gwas_list)).distinct().values("name", "efoid")
                         gwas_name_list = [gwas["name"] for gwas in gwases]
+                        efoid_list = [gwas["efoid"] for gwas in gwases]#I think this might be necessary to keep the order
                         gwas_string = ", ".join(gwas_name_list)
+                        #efoid_string = ", ".join(efoid_list)
                         exs_list = [ex["enhancerid"] for ex in exs if ex["rsid"] == snp["rsid"]]
                         exs_string = ", ".join(exs_list)
                         list_per_gene.append([snp["rsid"], snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]), tf_string, gwas_string,\
-                                            exs_string])
+                                            exs_string, efoid_list])
                     gene_dict[gene] = list_per_gene
             return render(request, 'draftapp/gene_search_results_snps.html', {'gene_dict': gene_dict})
         else:
