@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row h-200">
     <div class="col-12">
-      <h4>Enter a gene to find associated rSNPs:</h2>
+      <h4>Enter a gene to find associated rSNPs:</h4>
     </div>
     <div class="row input-group text-center">
       <div class="col-2">
@@ -14,18 +14,31 @@
             id="gene_input">
       </div>
 
+      <div class="col-md">
+        <button class="btn d-flex" style="background-color: #00CED1;" type="submit"
+          onclick="fillGenes()">Search</button>
+        </form>
+      </div>
+
+
+
       <div class="col-10 float-right">
         <ul id="gene_list">
         </ul>
       </div>
     </div>
   </div>
-
   <div class="row h-100 mt-5">
     <div class="col-md">
-      <button class="btn d-flex" style="background-color: #00CED1;" type="submit" onclick="fillGenes()">Search</button>
-      </form>
+      <h4>Or enter a .txt file of genes:</h4>
+      The file should have one gene per line.
     </div>
+  </div>
+  <div class="row h-100 mt-5">
+    <div class="col-md">
+      <input type="file" accept=".txt, .csv" id="gene_file">
+    </div>
+
 
     <div class="col-md">
       <button class="btn col-xs-1 float-right" style="background-color: #00CED1;" type="submit"
@@ -33,6 +46,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="col-2 align-self-start">
   <button class="btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
@@ -46,6 +60,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
   integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 <script>
   function makeButtonGroup(genename, list) {
     let group = document.createElement('btn-group');
@@ -97,6 +112,46 @@
 
   });
     });
+</script>
+
+<script>
+
+  document.getElementById('gene_file').addEventListener('change', upload, false);
+  function upload(evt) {
+    var data = null;
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function (event) {
+      var csvData = event.target.result;
+      var results = Papa.parse(csvData);
+
+      console.log(results);
+      console.log(csvData);
+      console.log(typeof csvData);
+      console.log(typeof results["data"]);
+
+      for (const array of results["data"]) {
+        gene_list = gene_list.concat(array);
+      };
+      console.log(gene_list);
+      let list = document.getElementById("gene_list");
+      for (const gene of gene_list) {
+        makeButtonGroup(gene, list);
+      };
+    };
+
+
+    let list = document.getElementById("gene_list");
+    for (const gene of csvData) {
+      makeButtonGroup(gene, list);
+    };
+
+    reader.onerror = function () {
+      alert('Unable to read ' + file.fileName);
+    };
+  };
+
 </script>
 
 

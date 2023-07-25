@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "papaparse": "^5.4.1",
     "select-pure": "^2.1.4"
   }
 }
