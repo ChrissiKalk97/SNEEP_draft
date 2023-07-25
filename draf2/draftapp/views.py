@@ -61,7 +61,7 @@ def gene_search_results_snps(request):
                     gene_info = gene["genesymbol"]+", "+gene["geneid"]
                     gene_dict[gene_info] = list_per_gene
                 else:
-                    no_hits.append(gene["genesymbol"])
+                    no_hits.append(gene["genesymbol"]+" (" + gene["geneid"] + ")")
             no_hits = ", ".join(no_hits)
             hits = ", ".join(hits)
             return render(request, 'draftapp/gene_search_results_snps.html', {'gene_dict': gene_dict, "no_hits": no_hits, "hits": hits})
