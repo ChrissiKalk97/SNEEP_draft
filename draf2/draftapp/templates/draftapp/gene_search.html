@@ -4,7 +4,7 @@
 
 <div class="container">
   <div class="row h-200">
-    <div class="col-6">
+    <div class="col-12">
       <h4>Enter a gene to find associated rSNPs:</h2>
     </div>
     <div class="row input-group text-center">
@@ -32,6 +32,12 @@
         onclick="deleteGenes()">Delete Genes</button>
     </div>
   </div>
+</div>
+
+<div class="col-2 align-self-start">
+  <button class="btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
+    id=" exemplary_query" onclick="exemplaryGeneQuery()">Example
+    Query</button>
 </div>
 
 
@@ -95,8 +101,8 @@
 
 
 <script>function fillGenes() {
-    document.getElementById('gene_input').innerText = "";
     document.getElementById('gene_input').value = gene_list;
+    document.getElementById('gene_input').innerHTML = "";
   }</script>
 
 <script>function deleteGenes() {
@@ -114,10 +120,12 @@
     }
   }
 </script>
-<button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example
-  Query</button>
 
 <style>
+  .container {
+    max-width: 1700px;
+  }
+
   .gene_button {
     background: #CCFFFF;
 
