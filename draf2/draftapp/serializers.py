@@ -12,3 +12,8 @@ class SnpsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snps
         fields = ["rsid", "chr", "start", "end", "allele1", "allele2", "allele3", "allele4", "Tfsxsnps_rsId"]
+
+
+class GWASQuerySerializer(serializers.Serializer):
+    key = serializers.DictField(child = serializers.CharField())
+    values = serializers.DictField(child = serializers.DictField())

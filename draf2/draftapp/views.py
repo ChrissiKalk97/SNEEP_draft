@@ -6,7 +6,9 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from draftapp.serializers import TfsxsnpsSerializer, SnpsSerializer
+from draftapp.serializers import TfsxsnpsSerializer, SnpsSerializer, GWASQuerySerializer
+import json
+
 
 # Create your views here.
 def IndexView(request):
@@ -100,7 +102,7 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
     #genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__in = snps)).values("genesymbol", "geneid")
     exs = Enhancersxsnps.objects.filter(rsid__rsid__in = snps).values("enhancerid", "rsid")
     for snp in snps_unique:
-        snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", "", gwas]
+        snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", ""]
         snp_dict[snp["rsid"]][1] = ", ".join([tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]])
         snp_dict[snp["rsid"]][4] = ", ".join([ex["enhancerid"] for ex in exs if ex["rsid"] == snp["rsid"]])
         #snp_dict[snp["rsid"]][2] = ", ".join([gene["genesymbol"] for gene in genes if gene["rsid"] == snp["rsid"]])
@@ -116,10 +118,7 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
             snp_dict[snp][4] = "Unknown"
     return snp_dict
 
-def get_snp_dict(request):
-    gwas = request.GET.getlist('gwas[]')
-    tf =  request.GET.getlist('tf[]')
-    chromosome = request.GET.getlist('chromosome[]')
+def get_snp_dict(gwas, tf, chromosome):
     if gwas:
         gwas_info = Gwasinfo.objects.filter(Q(name__in = gwas) | Q(efoid__in = gwas)).distinct().values("name", "efoid")
         snp_dict_complete = {}
@@ -151,7 +150,10 @@ def get_snp_dict(request):
 
 def gwas_search_results_dict_2(request):
     if request.method == 'GET':
-        snp_dict_complete = get_snp_dict(request)
+        gwas = request.GET.getlist('gwas[]')
+        tf =  request.GET.getlist('tf[]')
+        chromosome = request.GET.getlist('chromosome[]')
+        snp_dict_complete = get_snp_dict(gwas, tf, chromosome)
         return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
     else:
         raise Http404("No GWAS given")
@@ -173,3 +175,12 @@ def snps_detail(request, pk):
     if request.method == 'GET':
         serializer = SnpsSerializer(snp)
         return JsonResponse(serializer.data)
+    
+def GWASQueryRESTAPIview(request, pk):
+    if request.method == 'GET':
+        snp_dict_complete = get_snp_dict([pk], [], [])
+        #serializer = GWASQuerySerializer(snp_dict_complete)
+        json_response = json.dumps(snp_dict_complete)
+        return JsonResponse(json_response, safe = False)
+    else:
+        raise Http404("No GWAS given")
