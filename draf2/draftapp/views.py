@@ -116,41 +116,45 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
             snp_dict[snp][4] = "Unknown"
     return snp_dict
 
+def get_snp_dict(request):
+    gwas = request.GET.getlist('gwas[]')
+    tf =  request.GET.getlist('tf[]')
+    chromosome = request.GET.getlist('chromosome[]')
+    if gwas:
+        gwas_info = Gwasinfo.objects.filter(Q(name__in = gwas) | Q(efoid__in = gwas)).distinct().values("name", "efoid")
+        snp_dict_complete = {}
+        for gwas_trait in gwas_info:
+            snp_dict = {}
+            if tf and chromosome:
+                snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
+                                                    Q(Tfsxsnps_rsId__tfid__name__in = tf) & Q(chr__in = chromosome)).distinct()\
+                                                        .values("rsid", "chr", "start", "end")
+                snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])    
+            elif chromosome:
+                snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
+                                                    Q(chr__in = chromosome)).distinct()\
+                                                        .values("rsid", "chr", "start", "end")
+                snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
+            elif tf:
+                snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
+                                                    Q(Tfsxsnps_rsId__tfid__name__in = tf)).distinct()\
+                                                        .values("rsid", "chr", "start", "end")
+                
+                snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
+            else:
+                snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"])) \
+                                                    .distinct().values("rsid", "chr", "start", "end")
+                snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
+            gwas_key = gwas_trait["name"]+", "+gwas_trait["efoid"]
+            snp_dict_complete[gwas_key] = snp_dict
+    return snp_dict_complete
+
 def gwas_search_results_dict_2(request):
-     if request.method == 'GET':
-        gwas = request.GET.getlist('gwas[]')
-        tf =  request.GET.getlist('tf[]')
-        chromosome = request.GET.getlist('chromosome[]')
-        if gwas:
-            gwas_info = Gwasinfo.objects.filter(Q(name__in = gwas) | Q(efoid__in = gwas)).distinct().values("name", "efoid")
-            snp_dict_complete = {}
-            for gwas_trait in gwas_info:
-                snp_dict = {}
-                if tf and chromosome:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
-                                                        Q(Tfsxsnps_rsId__tfid__name__in = tf) & Q(chr__in = chromosome)).distinct()\
-                                                         .values("rsid", "chr", "start", "end")
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])    
-                elif chromosome:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
-                                                        Q(chr__in = chromosome)).distinct()\
-                                                         .values("rsid", "chr", "start", "end")
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
-                elif tf:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"]) & \
-                                                        Q(Tfsxsnps_rsId__tfid__name__in = tf)).distinct()\
-                                                         .values("rsid", "chr", "start", "end")
-                    
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
-                else:
-                    snps_unique = Snps.objects.filter(Q(Tfsxsnps_rsId__efoid__efoid__name__exact = gwas_trait["name"])) \
-                                                      .distinct().values("rsid", "chr", "start", "end")
-                    snp_dict = make_snp_dict_helper_2(snps_unique, snp_dict, tf, gwas_trait["name"])
-                gwas_key = gwas_trait["name"]+", "+gwas_trait["efoid"]
-                snp_dict_complete[gwas_key] = snp_dict
-            return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
-        else:
-                raise Http404("No GWAS given")
+    if request.method == 'GET':
+        snp_dict_complete = get_snp_dict(request)
+        return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
+    else:
+        raise Http404("No GWAS given")
 
 
 def REST_API_view(request):
