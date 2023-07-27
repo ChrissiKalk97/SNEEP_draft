@@ -151,7 +151,10 @@ def gwas_search_results_dict_2(request):
             return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
         else:
                 raise Http404("No GWAS given")
-        
+
+
+def REST_API_view(request):
+    return render(request, 'draftapp/REST_API_home.html', {})       
     
 @csrf_exempt
 def snps_detail(request, pk):
