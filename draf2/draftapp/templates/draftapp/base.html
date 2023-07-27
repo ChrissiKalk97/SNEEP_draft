@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
-    <meta charset="UTF-8">
-  {% load bootstrap5 %}
-  {% bootstrap_css %}
-  {% bootstrap_javascript %}
-  <!-- loads the path to your static files -->
-  {% load static %}
-<link rel="stylesheet" type = "text/css" href= "{% static 'draftapp/style.css' %}"/>
+<meta charset="UTF-8">
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!-- loads the path to your static files -->
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'draftapp/style.css' %}" />
 {% block title%}
-    <title>SNEEP</title>
+<title>SNEEP</title>
 {% endblock %}
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #CCFFFF;">
     <div class="container-fluid">
       <a class="navbar-brand" href="">SNEEP</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -33,6 +34,9 @@
               <li><a class="dropdown-item" href="{% url 'draftapp:snp_search'%}">SNP search</a></li>
             </ul>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'draftapp:REST_API' %}">REST API</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -41,8 +45,8 @@
   {% endblock %}
 
 
-  
+
 
 </body>
-</html>
 
+</html>
