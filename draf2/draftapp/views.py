@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.views import generic
 from .models import Enhancers, Enhancersxsnps, Snps, Gwas, Gwasinfo, Tfs, Tfsxsnps, Geneannotation, Enhancerxgene, Gwasinfo
 from django.http import Http404
-from asgiref.sync import sync_to_async
-import httpx
-from django.db.models import Q, Prefetch
+from django.db.models import Q
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from draftapp.serializers import TfsxsnpsSerializer, SnpsSerializer
 
 # Create your views here.
 def IndexView(request):
@@ -149,3 +151,18 @@ def gwas_search_results_dict_2(request):
             return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
         else:
                 raise Http404("No GWAS given")
+        
+    
+@csrf_exempt
+def snps_detail(request, pk):
+    """
+    Retrieve tfsxsnps data in json format
+    """
+    try:
+        snp = Snps.objects.get(pk=pk)
+    except Snps.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = SnpsSerializer(snp)
+        return JsonResponse(serializer.data)

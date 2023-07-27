@@ -224,6 +224,9 @@ class Gwasinfo(models.Model):
     class Meta:
         managed = False
         db_table = 'gwasInfo'
+    
+    def __repr__(self):
+        return '%d: %s' % (self.efoid, self.name)
 
 
 class Snipaversion(models.Model):

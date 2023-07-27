@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     'draftapp.apps.DraftappConfig',
     'debug_toolbar',
-    "silk",
+    'silk',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
