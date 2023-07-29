@@ -24,7 +24,7 @@ def gwas_search_extended(request):
 
 
 def gene_search(request):
-    genes = Geneannotation.objects.all().values('genesymbol')
+    genes = Geneannotation.objects.all().values('genesymbol', 'geneid')
     return render(request, 'draftapp/gene_search.html', {"genes": genes})
                 
             
@@ -35,12 +35,12 @@ def gene_search_results_snps(request):
         if query:
             no_hits = []#genes for which no coresponding snps etc are found
             hits = []#successfull genes
-            genes = Geneannotation.objects.filter(genesymbol__in = query)
+            genes = Geneannotation.objects.filter(Q(genesymbol__in = query) | Q(geneid__in = query)).values("genesymbol", "geneid")
             gene_dict= {}
             for gene in genes:
-                snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__exact = gene.genesymbol).distinct().values("rsid", "chr", "start", "end")
+                snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__exact = gene["genesymbol"]).distinct().values("rsid", "chr", "start", "end")
                 if snps: 
-                    hits.append(gene.genesymbol)
+                    hits.append(gene["genesymbol"])
                     snps_rsid = [rsnp["rsid"] for rsnp in snps]
                     tfs = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("tfid", "rsid", "efoid")
                     exs = Enhancersxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
@@ -58,9 +58,10 @@ def gene_search_results_snps(request):
                         exs_string = ", ".join(exs_list)
                         list_per_gene.append([snp["rsid"], snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]), tf_string, gwas_string,\
                                             exs_string, efoid_list])
-                    gene_dict[gene] = list_per_gene
+                    gene_info = gene["genesymbol"]+", "+gene["geneid"]
+                    gene_dict[gene_info] = list_per_gene
                 else:
-                    no_hits.append(gene.genesymbol)
+                    no_hits.append(gene["genesymbol"]+" (" + gene["geneid"] + ")")
             no_hits = ", ".join(no_hits)
             hits = ", ".join(hits)
             return render(request, 'draftapp/gene_search_results_snps.html', {'gene_dict': gene_dict, "no_hits": no_hits, "hits": hits})

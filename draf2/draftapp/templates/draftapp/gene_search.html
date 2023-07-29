@@ -92,13 +92,16 @@
       {% for gene in genes %}
             "{{gene.genesymbol}}",
     {% endfor %}
+    {% for gene in genes %}
+  "{{gene.geneid}}",
+    {% endfor %}
     ];
 
   $("#gene_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(availableTags, request.term);
 
-      response(results.slice(0, 20));
+      response(results.slice(0, 1000));
     },
 
     select: function (event, ui) {

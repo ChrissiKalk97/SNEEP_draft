@@ -1,5 +1,7 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
+{% load filter_tags %}
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -43,8 +45,10 @@
     {% for gene, list_per_gene in gene_dict.items %}
     {% for snp_list in list_per_gene %}
     <tr>
-      <td>{{gene.genesymbol}}</td>
-      <td>{{gene.geneid}}</td>
+      {% with gene|split:", " as geneInfo %}
+      <td>{{geneInfo.0}}</td>
+      <td>{{geneInfo.1}}</a></td>
+      {% endwith %}
       <td><a href="{% url 'draftapp:snp_detail' snp_list.0 %}">{{snp_list.0}}</a></td>
       <td>{{snp_list.1}}</td>
       <td>{{snp_list.3}}
