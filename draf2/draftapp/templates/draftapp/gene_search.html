@@ -9,13 +9,13 @@
     </div>
     <div class="row input-group text-center">
       <div class="col-2">
-        <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
+        <form class="d-flex" role="search">
           <input class="form-control me-2 d-flex" type="search" name="genes" placeholder="genes" aria-label="Search"
             id="gene_input">
       </div>
 
       <div class="col-md">
-        <button class="btn d-flex" style="background-color: #00CED1;" type="submit"
+        <button class="btn d-flex" style="background-color: #00CED1;" type="button"
           onclick="fillGenes()">Search</button>
         </form>
       </div>
@@ -161,8 +161,13 @@
 
 
 <script>function fillGenes() {
-    document.getElementById('gene_input').value = gene_list;
-    document.getElementById('gene_input').innerHTML = "";
+    let response = "{% url 'draftapp:gene_search_results'%}" + "?genes="
+    gene_list.forEach((gene, index) => {
+      if (index > 0) { response += "," }
+      response += gene
+    })
+
+    window.location.href = response
   }</script>
 
 <script>function deleteGenes() {
