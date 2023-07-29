@@ -140,7 +140,9 @@
       console.log(gene_list);
       let list = document.getElementById("gene_list");
       for (const gene of gene_list) {
-        makeButtonGroup(gene, list);
+        if (gene?.length > 0) {
+          makeButtonGroup(gene, list);
+        }
       };
     };
 
