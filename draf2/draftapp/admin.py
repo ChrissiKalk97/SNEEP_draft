@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Enhancers, Snps
+from .models import Interactions, Snps
 
-admin.site.register(Enhancers)
+admin.site.register(Interactions)
 admin.site.register(Snps)

@@ -1,0 +1,75 @@
+{% extends "draftapp/base.html" %}
+{% load static %}
+<style>
+  figure.homefig {
+    float: left;
+  }
+
+  div.introBlock {
+    float: left;
+    display: inline;
+  }
+
+  figure.rest_fig {
+    margin-top: 4em;
+    margin-left: 650px;
+    position: absolute;
+  }
+
+  p.contactText {
+    border-bottom: 1px solid #cccccc;
+  }
+
+  blockquote {
+    display: block;
+    width: 600px;
+    text-align: left;
+    float: left;
+  }
+
+  #RESTAPI_nav {
+    background: black;
+  }
+</style>
+
+{% block title%}
+<title>REST API</title>
+
+{% endblock %}
+
+{% block body%}
+<div class="row h-100 mt-5">
+  <div class="col-4">
+    <div id="wrapper">
+      <div class="introBlock">
+
+        <blockquote>
+          <h2>REST API</h2>
+
+          <p class='contactText textBox'>
+            If you want to individualize your queries, you can make use of our REST API, a REST framework based web
+            interface. It allows a specific
+            access to our database via the URL-line and provides the information as a JSON file. For a detailed guide on
+            how to use the REST API please read our
+            <strong><a class="link" href="#"> documentation</a></strong>.
+            <br>
+            <br>
+            You can try out <a href="http://127.0.0.1:8000/draftapp/REST_API/snps/rs10051400/" class="link"><b>this
+                example</b></a>.
+
+          </p>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <figure class="rest_fig">
+      <a href="https://www.django-rest-framework.org/"><img class='STITCHITImg'
+          src="{% static 'draftapp/images/REST_logo.png' %}" width="400px" alt='RESP_API_logo' />
+      </a>
+    </figure>
+  </div>
+</div>
+
+</body>
+{% endblock %}

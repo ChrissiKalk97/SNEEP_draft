@@ -28,5 +28,8 @@ urlpatterns = [
     path('Snp_search_results/', views.snp_search_results, name = 'snp_search_results'),
     path('Gene_search/', views.gene_search, name = 'gene_search'),
     path('Gene_search/Gene_result/', views.gene_search_results_snps, name = 'gene_search_results'),
+    path('REST_API/', views.REST_API_view, name = "REST_API"),
+    path('REST_API/snps/<pk>/', views.snps_detail),
+    path('REST_API/GWASQuery/<pk>/', views.GWASQueryRESTAPIview)
  ]
 

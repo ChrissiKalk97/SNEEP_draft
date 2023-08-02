@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     'draftapp.apps.DraftappConfig',
     'debug_toolbar',
-    "silk",
+    'silk',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'draf2.wsgi.application'
 DATABASES = {  
     'default': {  
         'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'draf2',  
+        'NAME': 'SNEEPtest',  
         'USER': 'ckalk',  
         'PASSWORD': 'T+C230720<3',  
         'HOST': 'localhost',  
