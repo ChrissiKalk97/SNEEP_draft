@@ -3,12 +3,20 @@ body{
     
 }
 
+nav .navbar-nav li a{
+  color: black !important;
+  }
+
+.col-2{
+  margin: 10px;
+}
+
   table.dataTable thead tr {
-    background-color: #CCFFFF;
+    background-color: #e4e9e9;
     color: black;
   }
   table.dataTable tbody {
-    background-color: #e8f7f7;
+    background-color:rgba(245, 245, 245, 0.911);
     color: black;
   }
   select:required:invalid {

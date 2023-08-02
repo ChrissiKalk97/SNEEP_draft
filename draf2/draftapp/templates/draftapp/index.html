@@ -1,6 +1,7 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
-<div class="container mt-5">
+{% load static %}
+<div class="container mt-5 px-4">
   <div class="row">
     <div class="col-4" style = "text-align: center;">
       <h4>SNEEP: How is transcription factor binding activity influenced by genetic variants?
@@ -10,22 +11,47 @@
       <h4>Explore the query options for SNEEP:</h4>
     </div>
   </div>
-  <div class="row">
+
+<div class="row gx-5">
     <div class="col-4" style = "text-align: justify;">
-      Regulatory sinel nucleotide polymorphisms (rSNPs) are predominantly found in non-coding regions. These changes of one base in the DNA 
+      Regulatory single nucleotide polymorphisms (rSNPs) are predominantly found in non-coding regions. These changes of one base in the DNA 
         can influence the binding affinity of transcription facotrs and with that the gene expression of target genes. SNEEP links rSNPs to the TFs influenced...
     </div>
-    <div class="col-2 text-center">
-      <a href="{% url 'draftapp:gwas_search_extended' %}" class="btn" style="background-color: #00CED1;" role="button">GWAS search </a>
-    </div>
-    <div class="col-2 text-center">
-      <a href="{% url 'draftapp:gene_search' %}" class="btn" style="background-color: #00CED1;" role="button">Gene search </a>
-    </div>
-    <div class="col-2 text-center">
-      <a href="{% url 'draftapp:snp_search' %}" class="btn" style="background-color: #00CED1;" role="button">SNP search </a>
+    
+  
+    <div class="col-2 text-center p-3">
+    <button class="btn btn-md btn-secondary inline-button p-3" style="background-color: #e4e9e9;">
+      <img class='GeneQuery' src="{% static 'draftapp/images/dna-47643.png' %}" width="200px" alt='GeneQuery' />
+      <span
+        style="margin-left: 10px;"
+        ><a href="{% url 'draftapp:gene_search' %}" class="btn" style="background-color: #e4e9e9;" role="button">Gene search </a></span
+      >
+    </button>
+  </div>
+
+    <div class="col-2 text-center p-3">
+          <button class="btn btn-md btn-secondary inline-button p-3" style="background-color: #e4e9e9;">
+            <img class='GeneQuery' src="{% static 'draftapp/images/dna-47643.png' %}" width="200px" alt='GeneQuery' />
+            <span
+              style="margin-left: 10px;"
+              ><a href="{% url 'draftapp:gwas_search_extended' %}" class="btn" style="background-color: #e4e9e9;" role="button">Gwas search </a></span
+            >
+          </button>
+        </div>
+      
+        <div class="col-2 text-center p-3">
+          <button class="btn btn-md btn-secondary inline-button p-3" style="background-color: #e4e9e9;">
+            <img class='GeneQuery' src="{% static 'draftapp/images/dna-47643.png' %}" width="200px" alt='GeneQuery' />
+            <span
+              style="margin-left: 10px;"
+              ><a href="{% url 'draftapp:snp_search' %}" class="btn" style="background-color: #e4e9e9;" role="button">SNP search </a></span
+            >
+          </button>
+        </div>
     </div>
   </div>
-</div>
+
+
 
           
           
