@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import Interactions, Interactionsxgenexsnps, Snps, Gwas, Gwasinfo, Tfs, Tfsxsnps, Geneannotation, Gwasinfo
+from .models import Interactionsxgenexsnps, Snps, Gwas, Gwasinfo, Tfs, Tfsxsnps, Geneannotation, Gwasinfo
 from django.http import Http404
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from draftapp.serializers import TfsxsnpsSerializer, SnpsSerializer, GwasDictSerializer
+from draftapp.serializers import SnpsSerializer, GwasDictSerializer
 import json
 from .GWASQuery import *
 
@@ -43,12 +43,12 @@ def gene_search_results_snps(request):
             genes = Geneannotation.objects.filter(Q(genesymbol__in = query) | Q(geneid__in = query)).values("genesymbol", "geneid")
             gene_dict= {}
             for gene in genes:
-                snps = Snps.objects.filter(interactionsxgenexsnps__geneid__genesymbol__exact = gene.genesymbol).distinct().values("rsid", "chr", "start", "end")
+                snps = Snps.objects.filter(interactionsxgenexsnps__geneid__genesymbol__exact = gene["genesymbol"]).distinct().values("rsid", "chr", "start", "end")
                 if snps: 
                     hits.append(gene["genesymbol"])
                     snps_rsid = [rsnp["rsid"] for rsnp in snps]
                     tfs = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("tfid", "rsid", "efoid")
-                    exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid", "geneid")
+                    exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
                     list_per_gene =  []
                     for  snp in snps:
                         tf_list = [tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]]
