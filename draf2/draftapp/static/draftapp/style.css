@@ -8,7 +8,11 @@ nav .navbar-nav li a{
   }
 
 .col-2{
-  margin: 10px;
+  margin: 10px !important;
+}
+
+.btn-secondary{
+  margin: 10px !important;
 }
 
   table.dataTable thead tr {
