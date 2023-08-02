@@ -169,6 +169,7 @@ def REST_API_view(request):
 def snps_detail(request, pk):
     """
     Retrieve tfsxsnps data in json format
+    With url: draftapp/REST_API/snps/rsid
     """
     try:
         snp = Snps.objects.get(pk=pk)
@@ -180,8 +181,17 @@ def snps_detail(request, pk):
         return JsonResponse(serializer.data)
     
 def GWASQueryRESTAPIview(request, pk):
+    """
+    Retrieve GWAS query resutls
+    With url: draftapp/REST_API/GWASQuery/trait&trait2...
+    trait can be trait name (with spaces etc..) or Efoid
+    """
     if request.method == 'GET':
-        snp_dict_complete = get_snp_dict([pk], [], [])
+        if "&" in pk:
+            gwas_traits = pk.split("&")
+        else:
+            gwas_traits = [pk]
+        snp_dict_complete = get_snp_dict(gwas_traits, [], [])
         for gwas, gwas_values in snp_dict_complete.items():
             for rsid, snp_list in gwas_values.items():
                line = SnpLine(snp_list[0], snp_list[1], snp_list[2], snp_list[3], snp_list[4])
