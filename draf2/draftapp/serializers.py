@@ -41,3 +41,7 @@ class GwasDictSerializer(serializers.Serializer):
 class GwasDictSerializer(DataclassSerializer):
     class Meta:
         dataclass = GwasDict
+
+class GeneDictSerializer(DataclassSerializer):
+    class Meta:
+        dataclass = GeneDict
