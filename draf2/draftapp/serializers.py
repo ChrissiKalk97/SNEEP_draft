@@ -36,17 +36,7 @@ class GwasDictSerializer(serializers.Serializer):
     #snpDict = SnpDictSerializer()
     gwasInfo = serializers.DictField()"""
 
-class SnpLineSerializer(DataclassSerializer):
-    class Meta:
-        dataclass = SnpLine
 
-class SnpListSerializer(DataclassSerializer):
-    class Meta:
-        dataclass = SnpList
-
-class SnpDictSerializer(DataclassSerializer):
-    class Meta:
-        dataclass = SnpDict
 
 class GwasDictSerializer(DataclassSerializer):
     class Meta:

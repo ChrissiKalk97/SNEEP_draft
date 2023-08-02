@@ -182,9 +182,13 @@ def snps_detail(request, pk):
 def GWASQueryRESTAPIview(request, pk):
     if request.method == 'GET':
         snp_dict_complete = get_snp_dict([pk], [], [])
+        for gwas, gwas_values in snp_dict_complete.items():
+            for rsid, snp_list in gwas_values.items():
+               line = SnpLine(snp_list[0], snp_list[1], snp_list[2], snp_list[3], snp_list[4])
+               snp_dict_complete[gwas][rsid] = line
+            snp_dict_complete[gwas] = SnpDict(snp_dict_complete[gwas])
         Gwas_dict = GwasDict(snp_dict_complete)
         serializer = GwasDictSerializer(Gwas_dict)
-        #json_response = json.dumps(snp_dict_complete)
         return JsonResponse(serializer.data, safe = False)
     else:
         raise Http404("No GWAS given")
