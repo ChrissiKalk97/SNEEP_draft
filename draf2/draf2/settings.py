@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'draf2.wsgi.application'
 DATABASES = {  
     'default': {  
         'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'draf2',  
+        'NAME': 'SNEEPtest',  
         'USER': 'ckalk',  
         'PASSWORD': 'T+C230720<3',  
         'HOST': 'localhost',  

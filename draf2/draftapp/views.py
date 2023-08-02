@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import Enhancers, Enhancersxsnps, Snps, Gwas, Gwasinfo, Tfs, Tfsxsnps, Geneannotation, Enhancerxgene, Gwasinfo
+from .models import Interactions, Interactionsxgenexsnps, Snps, Gwas, Gwasinfo, Tfs, Tfsxsnps, Geneannotation, Gwasinfo
 from django.http import Http404
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -43,12 +43,12 @@ def gene_search_results_snps(request):
             genes = Geneannotation.objects.filter(genesymbol__in = query)
             gene_dict= {}
             for gene in genes:
-                snps = Snps.objects.filter(enhancersxsnpsrsid__enhancerid__targetgene__genesymbol__exact = gene.genesymbol).distinct().values("rsid", "chr", "start", "end")
+                snps = Snps.objects.filter(interactionsxgenexsnps__geneid__genesymbol__exact = gene.genesymbol).distinct().values("rsid", "chr", "start", "end")
                 if snps: 
                     hits.append(gene.genesymbol)
                     snps_rsid = [rsnp["rsid"] for rsnp in snps]
                     tfs = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("tfid", "rsid", "efoid")
-                    exs = Enhancersxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
+                    exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid", "geneid")
                     list_per_gene =  []
                     for  snp in snps:
                         tf_list = [tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]]
@@ -100,16 +100,17 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
         tfs = Tfsxsnps.objects.filter(Q(tfid__name__in = trans_fac)& Q(rsid__rsid__in = snps)& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid", "rsid")
     else:
         tfs = Tfsxsnps.objects.filter(Q(rsid__rsid__in = snps)& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid", "rsid")
-    #genes = Geneannotation.objects.filter(Q(gene_enhancers__Enhancersxsnps_enhancerId__rsid__rsid__in = snps)).values("genesymbol", "geneid")
-    exs = Enhancersxsnps.objects.filter(rsid__rsid__in = snps).values("enhancerid", "rsid")
+    exs = Interactionsxgenexsnps.objects.filter(rsid__rsid__in = snps).values("enhancerid", "rsid", "geneid")
+    
     for snp in snps_unique:
-        #snp_line = SnpList(SnpLine(snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]), ", ".join([tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]]), "", "",", ".join([ex["enhancerid"] for ex in exs if ex["rsid"] == snp["rsid"]])))
-        #snp_dict[snp["rsid"]]  = snp_line
         snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", ""]
         snp_dict[snp["rsid"]][1] = ", ".join([tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]])
+        geneids = [ex["geneid"] for ex in exs if ex["rsid"] == snp["rsid"]]
+        genes = Geneannotation.objects.filter(Q(geneid__in = geneids)).values("geneid", "genesymbol")
+        snp_dict[snp["rsid"]][2] = ", ".join([gene["geneid"] for gene in genes])
+        snp_dict[snp["rsid"]][3] = ", ".join([gene["genesymbol"] for gene in genes])
         snp_dict[snp["rsid"]][4] = ", ".join([ex["enhancerid"] for ex in exs if ex["rsid"] == snp["rsid"]])
-        #snp_dict[snp["rsid"]][2] = ", ".join([gene["genesymbol"] for gene in genes if gene["rsid"] == snp["rsid"]])
-        #snp_dict[snp["rsid"]][3] = ", ".join([gene["geneid"] for gene in genes if gene["rsid"] == snp["rsid"]])
+        
             
         
     for snp, info in snp_dict.items():
