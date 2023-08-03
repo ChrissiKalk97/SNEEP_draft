@@ -1,49 +1,54 @@
-body{
-    background: white url("images/white-simple-textured-design-background.jpg") no-repeat;
-    
+body {
+  background: white url("images/white-simple-textured-design-background.jpg") no-repeat;
+
 }
 
 .btn-secondary {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
-.Query {
-  max-width: 180px;
+h5 {
+  font-weight: 700;
 }
 
-nav .navbar-nav li a{
+
+nav .navbar-nav li a {
   color: black !important;
-  }
+}
 
-.col-2{
+.col-2 {
   margin: 10px !important;
 }
 
-.btn-secondary{
+.btn-secondary {
   margin: 10px !important;
 }
 
-  table.dataTable thead tr {
-    background-color: #e4e9e9;
-    color: black;
-  }
-  table.dataTable tbody {
-    background-color:rgba(245, 245, 245, 0.911);
-    color: black;
-  }
-  select:required:invalid {
-    color: #666 !important;
-  }
-  option[value=""][disabled] {
-    display: none !important;
-  }
-  option {
-    color: #000 !important;
-  }
+table.dataTable thead tr {
+  background-color: #e4e9e9;
+  color: black;
+}
+
+table.dataTable tbody {
+  background-color: rgba(245, 245, 245, 0.911);
+  color: black;
+}
+
+select:required:invalid {
+  color: #666 !important;
+}
+
+option[value=""][disabled] {
+  display: none !important;
+}
+
+option {
+  color: #000 !important;
+}
 
 
-  /* In case we want to customize navbar  colors at some point...
+/* In case we want to customize navbar  colors at some point...
   
   .navbar-custom {
     background-color: #ff5500;
