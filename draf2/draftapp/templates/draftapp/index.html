@@ -12,34 +12,34 @@
     </div>
   </div>
 
-<div class="row">
-    <div class="col-4" style = "text-align: justify;">
+<div class="row gx-1">
+    <div class="col-lg-4 col-3" style = "text-align: justify;">
       Regulatory single nucleotide polymorphisms (rSNPs) are predominantly found in non-coding regions. These changes of one base in the DNA 
         can influence the binding affinity of transcription facotrs and with that the gene expression of target genes. SNEEP links rSNPs to the TFs influenced...
     </div>
     
   
-    <div class="col-2 text-center">
-    <button class="btn btn-md btn-secondary inline-button" style="background-color: #e4e9e9;">
+    <div class="col-2">
+    <button class="btn btn-secondary inline-button btn-flex" style="background-color: #e4e9e9;">
       <a href="{% url 'draftapp:gene_search' %}" class="btn" style="background-color: #e4e9e9;" role="button">
-      <img class='GeneQuery' src="{% static 'draftapp/images/dna-47643.png' %}" width="200px" alt='GeneQuery' />
-      <span>Gene search </a></span>
+        <p><img class='GeneQuery' src="{% static 'draftapp/images/dna-47643.png' %}"  alt='GeneQuery' /></p>
+      <span><h5> Gene query </h5></a></span>
     </button>
   </div>
 
-    <div class="col-2 text-center">
-          <button class="btn btn-md btn-secondary inline-button" style="background-color: #e4e9e9;">
+    <div class="col-2">
+          <button class="btn btn-secondary inline-button btn-flex" style="background-color: #e4e9e9;">
             <a href="{% url 'draftapp:gwas_search_extended' %}" class="btn" style="background-color: #e4e9e9;" role="button">
-            <img class='GwasQuery' src="{% static 'draftapp/images/dna-47643.png' %}" width="200px" alt='GwasQuery' />
-            <span>Gwas search</a></span>
+              <p><img class='GwasQuery' src="{% static 'draftapp/images/dna-47643.png' %}"  alt='GwasQuery' /></p>
+            <span><h5>Gwas query</h5></a></span>
           </button> 
         </div>
       
-        <div class="col-2 text-center">
-          <button class="btn btn-md btn-secondary inline-button" style="background-color: #e4e9e9;">
+        <div class="col-2">
+          <button class="btn btn-secondary inline-button btn-flex" style="background-color: #e4e9e9;">
             <a href="{% url 'draftapp:snp_search' %}" class="btn" style="background-color: #e4e9e9;" role="button">
-            <img class='SNPQuery' src="{% static 'draftapp/images/dna-47643.png' %}" width="200px" alt='SNPQuery' />
-            <span>SNP search </a></span>
+              <p><img class='SNPQuery' src="{% static 'draftapp/images/dna-47643.png' %}" alt='SNPQuery' /></p>
+            <span><h5>SNP query </h5></a></span>
           </button>
         </div>
     </div>
