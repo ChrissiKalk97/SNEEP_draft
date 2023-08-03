@@ -8,7 +8,7 @@ body{
   align-items: flex-start;
 }
 
-img {
+.Query {
   max-width: 180px;
 }
 
