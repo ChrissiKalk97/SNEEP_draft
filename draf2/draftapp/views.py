@@ -87,11 +87,11 @@ class SnpsDetailView(generic.DetailView):
     model = Snps
     template_name = 'draftapp/snps_detail.html' 
 
-def snp_search_results(request):
+def snp_search_results(request, snps):
     if request.method == 'GET':
-        query = request.GET.get('rSNP')
-        snp = Snps.objects.get(rsid__exact = query)
-    return render(request, 'draftapp/snps_detail.html', {"object": snp})
+        #query = request.GET.get(snps)
+        snps = Snps.objects.get(rsid__exact = snps)
+    return render(request, 'draftapp/snps_detail.html', {"object": snps})
 
  
  
