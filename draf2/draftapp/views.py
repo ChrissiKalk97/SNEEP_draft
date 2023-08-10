@@ -99,7 +99,7 @@ def snp_search_results(request, snps):
         for tfsxsnp in tfsxsnps:
             snp_position = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]) for snp in snps if snp["rsid"] == tfsxsnp["rsid"]]
             snp_position = snp_position[0]
-            interactions = ",".join([ex["enhancerid"]for ex in exs if ex["rsid"] == tfsxsnp["rsid"]])
+            interactions = ", ".join([ex["enhancerid"]for ex in exs if ex["rsid"] == tfsxsnp["rsid"]])
             if not interactions:
                 interactions = "Unknown"
             snp_query[tfsxsnp["id"]] = [tfsxsnp["rsid"], snp_position, tfsxsnp["tfid"], tfsxsnp["allele1"], tfsxsnp["allele2"],\
