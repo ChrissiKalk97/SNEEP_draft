@@ -89,10 +89,22 @@ class SnpsDetailView(generic.DetailView):
 
 def snp_search_results(request, snps):
     if request.method == 'GET':
-        #query = request.GET.get(snps)
         snps = snps.split(",")
-        snps = Snps.objects.filter(rsid__in = snps)
-    return render(request, 'draftapp/snps_query_results.html', {"snps": snps})
+        snps = Snps.objects.filter(rsid__in = snps).distinct().values("rsid", "start", "chr", "end")
+        snps_rsid = [rsnp["rsid"] for rsnp in snps]
+        tfsxsnps = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("id", "rsid", "tfid", "allele1", "allele2",\
+                                                                                      "strand", "posinmotif", "diffbindpvalue", "adjustedpvalue")
+        exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
+        snp_query = {}
+        for tfsxsnp in tfsxsnps:
+            snp_position = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]) for snp in snps if snp["rsid"] == tfsxsnp["rsid"]]
+            snp_position = snp_position[0]
+            interactions = ",".join([ex["enhancerid"]for ex in exs if ex["rsid"] == tfsxsnp["rsid"]])
+            if not interactions:
+                interactions = "Unknown"
+            snp_query[tfsxsnp["id"]] = [tfsxsnp["rsid"], snp_position, tfsxsnp["tfid"], tfsxsnp["allele1"], tfsxsnp["allele2"],\
+                                        tfsxsnp["strand"], tfsxsnp["posinmotif"], tfsxsnp["diffbindpvalue"], tfsxsnp["adjustedpvalue"], interactions]
+    return render(request, 'draftapp/snps_query_results.html', {"tfxsnps": snp_query})
 
  
  

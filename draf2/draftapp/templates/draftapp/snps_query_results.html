@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-{% if snps %}
+{% if tfxsnps %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -39,34 +39,23 @@
     </tr>
   </thead>
   <tbody>
-  {% for snp in snps%}
-    {% for tfxsnp in snp.Tfsxsnps_rsId.all%}
+  {% for tfxsnp in tfxsnps.values%}
     <tr>
-      <td>{{snp.rsid}}</td>
-      <td>{{snp.chr}}: {{snp.start}}-{{snp.end}}</td>
-      <td>{{tfxsnp.tfid.name}}</td>
-      <td>{{tfxsnp.allele1}}</td>
-      <td>{{tfxsnp.allele2}}</td>
-      <td>{{tfxsnp.strand}}</td>
-      <td>{{tfxsnp.posinmotif}}</td>
-      <td>{% if tfxsnp.diffbindpvalue < 0 %} creates {% else %} disrupts {% endif %} </td>
-      <td>{{tfxsnp.diffbindpvalue}}</td>
-      <td>{{tfxsnp.adjustedpvalue}}</td>
-      <td> {%if snp.Interactions_gene_snps_rsid.all%}
-          {% for exs in snp.Interactions_gene_snps_rsid.all%}
-          {% if exs == snp.Interactions_gene_snps_rsid.last%}
-          {{exs.enhancerid.enhancerid}}
-          {% else %}
-          {{exs.enhancerid.enhancerid}},
-          {% endif %}
-          {% endfor %}
-        {%else%}
-        Unknown
-        {% endif %}
+      <td>{{tfxsnp.0}}</td>
+      <td>{{tfxsnp.1}}</td>
+      <td>{{tfxsnp.2}}</td>
+      <td>{{tfxsnp.3}}</td>
+      <td>{{tfxsnp.4}}</td>
+      <td>{{tfxsnp.5}}</td>
+      <td>{{tfxsnp.6}}</td>
+      <td>{% if tfxsnp.7 < 0 %} creates {% else %} disrupts {% endif %} </td>
+      <td>{{tfxsnp.7}}</td>
+      <td>{{tfxsnp.8}}</td>
+      <td> {{tfxsnp.9}}
       </td>
     </tr>
     {% endfor %}
-    {% endfor %}
+    
 
   </tbody>
 </table>
@@ -79,15 +68,3 @@
 
 
 
-
-{% if snp.Tfsxsnps_rsId.all%}
-{% for tfsxsnp in snp.Tfsxsnps_rsId.all%}
-{% if tfsxsnp == snp.Tfsxsnps_rsId.last%}
-{{tfsxsnp.tfid.name}}
-{% else %}
-{{tfsxsnp.tfid.name}},
-{% endif %}
-{% endfor %}
-{% else %}
-Unknown
-{% endif %}<!--not sure whether unknown is needed here...-->
