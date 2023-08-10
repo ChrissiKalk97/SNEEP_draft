@@ -130,29 +130,18 @@
     reader.onload = function (event) {
       var csvData = event.target.result;
       var results = Papa.parse(csvData);
-
-      console.log(results);
-      console.log(csvData);
-      console.log(typeof csvData);
-      console.log(typeof results["data"]);
-
       for (const array of results["data"]) {
         gene_list = gene_list.concat(array);
       };
-      console.log(gene_list);
-      let list = document.getElementById("gene_list");
+    console.log(gene_list); 
+  };
+     /*  let list = document.getElementById("gene_list");
       for (const gene of gene_list) {
         if (gene?.length > 0) {
           makeButtonGroup(gene, list);
         }
-      };
-    };
-
-
-    let list = document.getElementById("gene_list");
-    for (const gene of csvData) {
-      makeButtonGroup(gene, list);
-    };
+      };*/
+   
 
     reader.onerror = function () {
       alert('Unable to read ' + file.fileName);
