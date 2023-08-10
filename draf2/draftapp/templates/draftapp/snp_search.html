@@ -158,7 +158,7 @@
 
 
 <script>function fillGenes() {
-    let response = "{% url 'draftapp:snp_search_results'%}" 
+    let response = "{% url 'draftapp:snp_search'%}"
     snp_list.forEach((gene, index) => {
       if (index > 0) { response += "," }
       response += gene

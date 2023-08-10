@@ -39,7 +39,7 @@ def gene_query(query):
     genes = Geneannotation.objects.filter(Q(genesymbol__in = query) | Q(geneid__in = query)).values("genesymbol", "geneid")
     gene_dict= {}
     for gene in genes:
-        snps = Snps.objects.filter(interactionsxgenexsnps__geneid__genesymbol__exact = gene["genesymbol"]).distinct().values("rsid", "chr", "start", "end")
+        snps = Snps.objects.filter(Interactions_gene_snps_rsid__geneid__genesymbol__exact = gene["genesymbol"]).distinct().values("rsid", "chr", "start", "end")
         if snps: 
             hits.append(gene["genesymbol"])
             snps_rsid = [rsnp["rsid"] for rsnp in snps]
@@ -94,7 +94,9 @@ def snp_search_results(request, snps):
         snps_rsid = [rsnp["rsid"] for rsnp in snps]
         tfsxsnps = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("id", "rsid", "tfid", "allele1", "allele2",\
                                                                                       "strand", "posinmotif", "diffbindpvalue", "adjustedpvalue")
-        exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid")
+        exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid", "geneid")
+        geneids = list(set([ex["geneid"]for ex in exs]))
+        genes = Geneannotation.objects.filter(geneid__in = geneids).values("geneid", "genesymbol")
         snp_query = {}
         for tfsxsnp in tfsxsnps:
             snp_position = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]) for snp in snps if snp["rsid"] == tfsxsnp["rsid"]]
@@ -102,8 +104,18 @@ def snp_search_results(request, snps):
             interactions = ", ".join([ex["enhancerid"]for ex in exs if ex["rsid"] == tfsxsnp["rsid"]])
             if not interactions:
                 interactions = "Unknown"
+            linked_genes = [ex["geneid"]for ex in exs if ex["rsid"] == tfsxsnp["rsid"]]
+            if not linked_genes:
+                linked_geneids = "Unknown"
+                linked_genenames = "Unknown"
+            else:
+                linked_genenames = [gene["genesymbol"] for gene in genes if gene["geneid"] in linked_geneids]
+                linked_genenames = ", ".join(linked_genenames)
+                linked_geneids = ", ".join(linked_genes)
+
             snp_query[tfsxsnp["id"]] = [tfsxsnp["rsid"], snp_position, tfsxsnp["tfid"], tfsxsnp["allele1"], tfsxsnp["allele2"],\
-                                        tfsxsnp["strand"], tfsxsnp["posinmotif"], tfsxsnp["diffbindpvalue"], tfsxsnp["adjustedpvalue"], interactions]
+                                        tfsxsnp["strand"], tfsxsnp["posinmotif"], tfsxsnp["diffbindpvalue"], tfsxsnp["adjustedpvalue"],\
+                                              interactions, linked_geneids, linked_genenames]
     return render(request, 'draftapp/snps_query_results.html', {"tfxsnps": snp_query})
 
  
