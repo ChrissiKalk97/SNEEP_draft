@@ -109,7 +109,7 @@ def snp_search_results(request, snps):
                 linked_geneids = "Unknown"
                 linked_genenames = "Unknown"
             else:
-                linked_genenames = [gene["genesymbol"] for gene in genes if gene["geneid"] in linked_geneids]
+                linked_genenames = [gene["genesymbol"] for gene in genes if gene["geneid"] in linked_genes]
                 linked_genenames = ", ".join(linked_genenames)
                 linked_geneids = ", ".join(linked_genes)
 

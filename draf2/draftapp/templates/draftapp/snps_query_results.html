@@ -12,16 +12,18 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
-    $('#table').DataTable();
+    $('#table').DataTable({
+    });
     lengthMenu: [
       [10, 25, 50, -1],
       [10, 25, 50, 'All'],
     ];
+    
   });
+  
 </script>
-
+<div class="container-fluid">
 <h3>Details about rSNPs </h3>
-
 <table id="table" class="table table-bordered">
   <thead class="alert-success">
     <tr>
@@ -63,7 +65,7 @@
 
   </tbody>
 </table>
-
+</div>
 {% else %}
 <h3>This SNP is not investigated by us!</h3>
 {% endif %}
