@@ -93,9 +93,9 @@ class Interactions(models.Model):
 
 class Interactionsxgenexsnps(models.Model):
     id = models.CharField(primary_key=True, max_length=255)
-    enhancerid = models.ForeignKey(Interactions, models.DO_NOTHING, db_column='enhancerId')  # Field name made lowercase.
+    enhancerid = models.ForeignKey(Interactions, models.DO_NOTHING, db_column='enhancerid')  # Field name made lowercase.
     geneid = models.ForeignKey(Geneannotation, models.DO_NOTHING, db_column='geneId')  # Field name made lowercase.
-    rsid = models.ForeignKey('Snps', models.DO_NOTHING, db_column='rsId')  # Field name made lowercase.
+    rsid = models.ForeignKey('Snps', models.DO_NOTHING, db_column='rsid', related_name = "Interactions_gene_snps_rsid")  # Field name made lowercase.
     efoid = models.ForeignKey(Gwas, models.DO_NOTHING, db_column='efoId', related_name = "Interactions_gene_snps_efoids",to_field='efoid')  # Field name made lowercase.
 
     class Meta:

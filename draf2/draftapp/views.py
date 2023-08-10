@@ -90,8 +90,9 @@ class SnpsDetailView(generic.DetailView):
 def snp_search_results(request, snps):
     if request.method == 'GET':
         #query = request.GET.get(snps)
-        snps = Snps.objects.get(rsid__exact = snps)
-    return render(request, 'draftapp/snps_detail.html', {"object": snps})
+        snps = snps.split(",")
+        snps = Snps.objects.filter(rsid__in = snps)
+    return render(request, 'draftapp/snps_query_results.html', {"snps": snps})
 
  
  
