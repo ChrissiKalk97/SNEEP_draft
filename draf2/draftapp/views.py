@@ -90,16 +90,19 @@ class SnpsDetailView(generic.DetailView):
 def snp_search_results(request, snps):
     if request.method == 'GET':
         snps = snps.split(",")
-        snps = Snps.objects.filter(rsid__in = snps).distinct().values("rsid", "start", "chr", "end")
-        snps_rsid = [rsnp["rsid"] for rsnp in snps]
+        snps_objects = Snps.objects.filter(rsid__in = snps).distinct().values("rsid", "start", "chr", "end")
+        snps_rsid = [rsnp["rsid"] for rsnp in snps_objects]
         tfsxsnps = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("id", "rsid", "tfid", "allele1", "allele2",\
                                                                                       "strand", "posinmotif", "diffbindpvalue", "adjustedpvalue")
+        tfsxsnps_rsid = list(set([tfsxsnp["rsid"] for tfsxsnp in tfsxsnps]))
+        no_hits = list(set([snp for snp in snps if snp not in tfsxsnps_rsid]))
+        no_hits = ", ".join(no_hits)
         exs = Interactionsxgenexsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("enhancerid", "rsid", "geneid")
         geneids = list(set([ex["geneid"]for ex in exs]))
         genes = Geneannotation.objects.filter(geneid__in = geneids).values("geneid", "genesymbol")
         snp_query = {}
         for tfsxsnp in tfsxsnps:
-            snp_position = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]) for snp in snps if snp["rsid"] == tfsxsnp["rsid"]]
+            snp_position = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]) for snp in snps_objects if snp["rsid"] == tfsxsnp["rsid"]]
             snp_position = snp_position[0]
             interactions = ", ".join([ex["enhancerid"]for ex in exs if ex["rsid"] == tfsxsnp["rsid"]])
             if not interactions:
@@ -116,7 +119,7 @@ def snp_search_results(request, snps):
             snp_query[tfsxsnp["id"]] = [tfsxsnp["rsid"], snp_position, tfsxsnp["tfid"], tfsxsnp["allele1"], tfsxsnp["allele2"],\
                                         tfsxsnp["strand"], tfsxsnp["posinmotif"], tfsxsnp["diffbindpvalue"], tfsxsnp["adjustedpvalue"],\
                                               interactions, linked_geneids, linked_genenames]
-    return render(request, 'draftapp/snps_query_results.html', {"tfxsnps": snp_query})
+    return render(request, 'draftapp/snps_query_results.html', {"tfxsnps": snp_query, "no_hits":no_hits})
 
  
  

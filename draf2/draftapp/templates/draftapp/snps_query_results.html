@@ -86,6 +86,9 @@ function format(d) {
 </script>
 <div class="container-fluid">
 <h3>Details about rSNPs </h3>
+{% if no_hits%}
+<h5>For the following rSNPs no entries were found in the SNEEP database: {{no_hits}}</h5>
+{% endif %}
 <table id="table" class="table table-bordered" style="width:120%">
   <thead class="alert-success">
     <tr>
