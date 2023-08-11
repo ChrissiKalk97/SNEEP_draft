@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
 
+<div class = "container-fluid">
 <div class="container">
   <div class="row h-200">
     <div class="col-4">
@@ -73,7 +74,7 @@
 
 </div>
 </div>
-</div>
+
 
 <script>
 
@@ -105,6 +106,16 @@
     location.reload();
 
   }</script>
-<button type="button" class='ajax_search_list' id="exemplary_query" onclick="exemplaryGeneQuery()">Example
+<button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left' style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
   Query</button>
+</div>
+
+<style>
+  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
+    color: #fff !important;
+    background-color: #063944 !important;
+    border-color: #063944 !important; /*set the color you want here*/
+}
+</style>
 {% endblock %}
+

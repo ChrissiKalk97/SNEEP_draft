@@ -49,8 +49,8 @@
 
 
 <div class="col-2 align-self-start">
-  <button class="btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
-    id=" exemplary_query" onclick="exemplaryGeneQuery()">Example
+  <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
+    id="exemplary_query" onclick="exemplaryGeneQuery()">Example
     Query</button>
 </div>
 
@@ -177,7 +177,16 @@
   }
 </script>
 
+
+
 <style>
+  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
+    color: #fff !important;
+    background-color: #063944 !important;
+    border-color: #063944 !important; /*set the color you want here*/
+}
+
+
   .container {
     max-width: 1700px;
   }
