@@ -25,8 +25,13 @@
     $('#table').DataTable({
       dom: 'Bfrtip',
       buttons: [
-        'copy', 'csv', 'excel', 'pdf', 'print'
-      ],
+            { extend: 'copy', className: 'btn btn-light btn-outline-dark'},
+            { extend: 'excel', className: 'btn btn-light btn-outline-dark' },
+            { extend: 'csv', className: 'btn btn-light btn-outline-dark' }, 
+            { extend: 'pdf', className: 'btn btn-light btn-outline-dark' },
+            { extend: 'print', className: 'btn btn-light btn-outline-dark' }
+     ],
+        
       columnDefs: [
         {
             target: 11,
