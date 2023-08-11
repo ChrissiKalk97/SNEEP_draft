@@ -131,14 +131,15 @@ def make_snp_dict_helper_2(snps_unique, snp_dict, trans_fac, gwas):
     else:
         tfs = Tfsxsnps.objects.filter(Q(rsid__rsid__in = snps)& Q(efoid__efoid__name__exact = gwas)).distinct().values("tfid", "rsid")
     exs = Interactionsxgenexsnps.objects.filter(rsid__rsid__in = snps).values("enhancerid", "rsid", "geneid")
-    
+    gene_ids_for_filter = [ex["geneid"] for ex in exs]
+    gene_annos = Geneannotation.objects.filter(Q(geneid__in = gene_ids_for_filter )).values("geneid", "genesymbol")
     for snp in snps_unique:
         snp_dict[snp["rsid"]] = [snp["chr"]+":"+str(snp["start"])+"-"+str(snp["end"]),"", "", "", ""]
         snp_dict[snp["rsid"]][1] = ", ".join([tf["tfid"] for tf in tfs if tf["rsid"] == snp["rsid"]])
         geneids = [ex["geneid"] for ex in exs if ex["rsid"] == snp["rsid"]]
-        genes = Geneannotation.objects.filter(Q(geneid__in = geneids)).values("geneid", "genesymbol")
-        snp_dict[snp["rsid"]][2] = ", ".join([gene["geneid"] for gene in genes])
-        snp_dict[snp["rsid"]][3] = ", ".join([gene["genesymbol"] for gene in genes])
+        genes = [gene_anno["genesymbol"] for gene_anno in gene_annos if gene_anno["geneid"] in geneids]
+        snp_dict[snp["rsid"]][2] = ", ".join([geneid for geneid in geneids])
+        snp_dict[snp["rsid"]][3] = ", ".join([genename for genename in genes])
         snp_dict[snp["rsid"]][4] = ", ".join([ex["enhancerid"] for ex in exs if ex["rsid"] == snp["rsid"]])
         
             
