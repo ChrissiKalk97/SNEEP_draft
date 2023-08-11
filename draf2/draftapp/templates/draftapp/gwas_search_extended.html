@@ -67,7 +67,7 @@
 
       <div class="row h-100 mt-5">
         <div class="col-4 mx-auto">
-          <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
+          <button class="btn d-flex search" style="background-color: #063944; color: #fff; border-color: #063944" type="submit">Search</button>
     </form>
   </div>
 </div>
@@ -116,6 +116,12 @@
     background-color: #063944 !important;
     border-color: #063944 !important; /*set the color you want here*/
 }
+.search:hover, .search:focus, .search:active, .search.active, .open>.dropdown-toggle.search {
+  color: #063944 !important;
+    background-color: white !important;
+    border-color: #063944 !important; /*set the color you want here*/
+}
+
 </style>
 {% endblock %}
 

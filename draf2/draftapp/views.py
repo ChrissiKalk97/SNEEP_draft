@@ -188,8 +188,11 @@ def gwas_search_results_dict_2(request):
         gwas = request.GET.getlist('gwas[]')
         tf =  request.GET.getlist('tf[]')
         chromosome = request.GET.getlist('chromosome[]')
-        snp_dict_complete = get_snp_dict(gwas, tf, chromosome)
-        return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
+        if gwas:
+            snp_dict_complete = get_snp_dict(gwas, tf, chromosome)
+            return render(request, 'draftapp/gwas_search_results_dict.html', {'snp_dict': snp_dict_complete})
+        else:
+            raise Http404("No GWAS given")
     else:
         raise Http404("No GWAS given")
 
