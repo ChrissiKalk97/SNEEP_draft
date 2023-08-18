@@ -173,6 +173,23 @@
 
 </script>
 
+<script>
+  function getSelectValues(select) {
+    var result = [];
+    var options = select && select.options;
+    var opt;
+
+    for (var i = 0, iLen = options.length; i < iLen; i++) {
+      opt = options[i];
+
+      if (opt.selected) {
+        result.push(opt.value || opt.text);
+      }
+    }
+    return result;
+  }
+</script>
+
 
 <script>function fillGenes() {
     let response = "{% url 'draftapp:Gwas_search_results_dict'%}" + "?gwas[]="
@@ -180,7 +197,14 @@
       if (index > 0) { response += "," }
       response += gwas
     })
-    response += "&?tf=[]&?chr=[]"
+    response += "&?tf[]="
+    let tf = document.getElementById('tf')
+    let tfs = getSelectValues(tf)
+    tfs.forEach((tf, index) => {
+      if (index > 0) { response += "," }
+      response += tf
+    })
+    response += "&?chromosome[]="
     window.location.href = response
   }</script>
 
