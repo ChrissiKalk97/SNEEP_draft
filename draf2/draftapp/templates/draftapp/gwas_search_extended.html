@@ -194,17 +194,24 @@
 <script>function fillGenes() {
     let response = "{% url 'draftapp:Gwas_search_results_dict'%}" + "?gwas[]="
     gwas_list.forEach((gwas, index) => {
-      if (index > 0) { response += "," }
+      if (index > 0) { response += "&gwas[]=" }
       response += gwas
     })
-    response += "&tf[]="
+
     let tf = document.getElementById('tf')
     let tfs = getSelectValues(tf)
     tfs.forEach((tf, index) => {
-      if (index > 0) { response += "," }
+      if (index >= 0) { response += "&tf[]=" }
       response += tf
     })
-    response += "&chromosome[]="
+
+    let chr = document.getElementById('chr')
+    let chrs = getSelectValues(chr)
+    chrs.forEach((chr, index) => {
+      if (index >= 0) { response += "&chromosome[]=" }
+      response += chr
+    })
+
     window.location.href = response
   }</script>
 
