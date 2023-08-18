@@ -1,50 +1,33 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
-
-
-
-
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
 
-<div class = "container-fluid">
 <div class="container">
-  <div class="row h-200">
-    <div class="col-4">
-      <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
-    </div>
-    <div class="col-4">
-      <h4>Query rSNPs for a transcription factor:</h2>
-    </div>
-    <div class="col-4">
-      <h4>Query rSNPs of a chromosome:</h2>
-    </div>
-  </div>
+  <div class="container">
 
-
-
-
-  <div class="row input-group">
-    <form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
-
-      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-      <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-
+    <div class="row h-200">
       <div class="col-4">
-        <select name="gwas[]" id="gwas" class="gwas" multiple>
-
-          {%for gwas in gwases%}
-          <option value="{{gwas.name}}"> {{gwas.name}}</option>
-          {% endfor %}
-          {%for gwas in gwases%}
-          <option value="{{gwas.efoid}}"> {{gwas.efoid}}</option>
-          {% endfor %}
-        </select>
+        <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
       </div>
+      <div class="col-4">
+        <h4>Query rSNPs for a transcription factor:</h2>
+      </div>
+      <div class="col-4">
+        <h4>Query rSNPs of a chromosome:</h2>
+      </div>
+    </div>
 
 
+
+
+    <div class="row input-group">
+      <div class="col-4">
+        <form class="d-flex" role="search">
+          <input class="form-control me-2 d-flex" type="search" name="gwas" placeholder="gwas" aria-label="Search"
+            id="gwas_input">
+      </div>
 
       <div class="col-4">
         <select name="tf[]" id="tf" class="tf" multiple>
@@ -63,18 +46,173 @@
           {% endfor %}
         </select>
       </div>
+    </div>
 
 
-      <div class="row h-100 mt-5">
-        <div class="col-4 mx-auto">
-          <button class="btn d-flex search" style="background-color: #063944; color: #fff; border-color: #063944" type="submit">Search</button>
-    </form>
+    <div class="row mt-5">
+      <div class="col-4">
+        <ul id="gwas_list">
+        </ul>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-4 align-items-start">
+        <button class="btn d-flex" style="background-color: #00CED1;" type="submit" onclick="deleteGenes()">Delete
+          GWAS</button>
+      </div>
+      <div class="col-4">
+        <button class="btn d-flex" style="background-color: #063944; color: #fff; border-color: #063944" type="button"
+          onclick="fillGenes()">Search</button>
+      </div>
+    </div>
+
+
+
+    <div class="row h-100 mt-5">
+      <div class="col-md">
+        <h4>Or enter a .txt file of GWAS traits or EFOIDs:</h4>
+        The file should have one GWAS per line.
+      </div>
+    </div>
+    <div class="row h-100 mt-5">
+      <div class="col-md">
+        <input type="file" accept=".txt, .csv" id="gwas_file">
+      </div>
+    </div>
+
+
   </div>
 </div>
-
-</div>
 </div>
 
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+<script>
+  function makeButtonGroup(gwas, list) {
+    let group = document.createElement('btn-group');
+    let li = document.createElement('button');
+    let x = document.createElement('button');
+    li.classList.add("gene_button");
+    li.classList.add("btn");
+    x.classList.add("btn");
+    li.innerText = gwas;
+    x.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>';
+    const isThisElement = (element) => element == li.innerText;
+    x.onclick = function () {
+      gwas_index = gwas_list.findIndex(isThisElement);
+      if (gwas_index != -1) {
+        gwas_list.splice(gwas_index, 1)
+      };
+      li.remove();
+      x.remove();
+    };
+    group.appendChild(li);
+    group.appendChild(x);
+    list.appendChild(group);
+
+  };
+</script>
+
+<script>
+  let gwas_list = [];
+  $(function () {
+    var availableTags = [
+      {% for gwas in gwases %}
+            "{{gwas.name}}",
+    {% endfor %}
+    {% for gwas in gwases %}
+  "{{gwas.efoid}}",
+    {% endfor %}
+    ];
+
+  $("#gwas_input").autocomplete({
+    source: function (request, response) {
+      var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+      response(results.slice(0, 1000));
+    },
+
+    select: function (event, ui) {
+      gwas_list.push(ui.item.value);
+      console.log(gwas_list);
+      let list = document.getElementById("gwas_list");
+      makeButtonGroup(gwas_list.slice(-1), list);
+      document.getElementById('gwas_input').value = "";
+      return false;
+    },
+
+  });
+    });
+</script>
+
+<script>
+
+  document.getElementById('gwas_file').addEventListener('change', upload, false);
+  function upload(evt) {
+    var data = null;
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function (event) {
+      var csvData = event.target.result;
+      var results = Papa.parse(csvData);
+      for (const array of results["data"]) {
+        gwas_list = gwas_list.concat(array);
+      };
+      console.log(gwas_list);
+    };
+
+    reader.onerror = function () {
+      alert('Unable to read ' + file.fileName);
+    };
+  };
+
+</script>
+
+
+<script>function fillGenes() {
+    let response = "{% url 'draftapp:Gwas_search_results_dict'%}" + "?gwas[]="
+    gwas_list.forEach((gwas, index) => {
+      if (index > 0) { response += "," }
+      response += gwas
+    })
+    response += "&?tf=[]&?chr=[]"
+    window.location.href = response
+  }</script>
+
+<script>function deleteGenes() {
+    document.getElementById("gwas_list").innerHTML = "";
+    gwas_list = [];
+    document.getElementById('gwas_input').value = "";
+  }</script>
+
+
+<script>function exemplaryGeneQuery() {
+    gwas_list = ["atherosclerosis"];
+    let list = document.getElementById("gwas_list");
+    for (const gwas of gwas_list.values()) {
+      makeButtonGroup(gwas, list);
+    }
+
+
+    /*tf_list = ["AIRE", "EBF3", "ZBTB6"];
+      let list = document.getElementById("gwas_list");
+      for (const gwas of gwas_list.values()) {
+        makeButtonGroup(gwas, list);
+      }
+    
+  
+    chr_list = ["chr11", "chr12"];
+      let list = document.getElementById("gwas_list");
+      for (const gwas of gwas_list.values()) {
+        makeButtonGroup(gwas, list);
+      }*/
+  }
+</script>
 
 <script>
 
@@ -88,40 +226,34 @@
     shadow: true,      // default false
     placeholder: 'chromosome',  // default Search...
   })
-
-  new MultiSelectTag('gwas', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'gwas',  // default Search...
-  })
 </script>
 
 
-
-<script>
-  function exemplaryGeneQuery() {
-    $('#gwas').val(["atherosclerosis"]);
-    $('#tf').val(["AIRE", "EBF3", "ZBTB6"]);
-    $('#chr').val(["chr11", "chr12"]);
-    location.reload();
-
-  }</script>
-<button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left' style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
-  Query</button>
-</div>
-
 <style>
-  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
+  .exemplary_query:hover,
+  .exemplary_query:focus,
+  .exemplary_query:active,
+  .exemplary_query.active,
+  .open>.dropdown-toggle.exemplary_query {
     color: #fff !important;
     background-color: #063944 !important;
-    border-color: #063944 !important; /*set the color you want here*/
-}
-.search:hover, .search:focus, .search:active, .search.active, .open>.dropdown-toggle.search {
-  color: #063944 !important;
-    background-color: white !important;
-    border-color: #063944 !important; /*set the color you want here*/
-}
+    border-color: #063944 !important;
+    /*set the color you want here*/
+  }
 
+
+  .container {
+    max-width: 1700px;
+  }
+
+  .gene_button {
+    background: #CCFFFF;
+
+  }
+
+  .btn-group {
+    border: #1df5f5;
+  }
 </style>
-{% endblock %}
 
+{% endblock %}
