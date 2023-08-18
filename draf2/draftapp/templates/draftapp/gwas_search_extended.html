@@ -197,14 +197,14 @@
       if (index > 0) { response += "," }
       response += gwas
     })
-    response += "&?tf[]="
+    response += "&tf[]="
     let tf = document.getElementById('tf')
     let tfs = getSelectValues(tf)
     tfs.forEach((tf, index) => {
       if (index > 0) { response += "," }
       response += tf
     })
-    response += "&?chromosome[]="
+    response += "&chromosome[]="
     window.location.href = response
   }</script>
 
