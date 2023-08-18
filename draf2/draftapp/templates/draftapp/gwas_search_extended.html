@@ -25,26 +25,20 @@
     <div class="row input-group">
       <div class="col-4">
         <form class="d-flex" role="search">
-          <input class="form-control me-2 d-flex" type="search" name="gwas" placeholder="gwas" aria-label="Search"
-            id="gwas_input">
+          <input class="form-control me-2 d-flex" type="search" name="gwas" placeholder="GWAS name or EFOID"
+            aria-label="Search" id="gwas_input">
       </div>
 
       <div class="col-4">
-        <select name="tf[]" id="tf" class="tf" multiple>
-
-          {%for tf in tfs%}
-          <option value="{{tf.name}}"> {{tf.name}}</option>
-          {% endfor %}
-        </select>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2 d-flex" type="search" name="tf" placeholder="Transcription factors"
+            aria-label="Search" id="tf_input">
       </div>
 
       <div class="col-4">
-        <select name="chromosome[]" id="chr" class="chr" multiple>
-
-          {%for CHR in chrs%}
-          <option value="{{CHR}}"> {{CHR}}</option>
-          {% endfor %}
-        </select>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2 d-flex" type="search" name="chr" placeholder="Chromosomes" aria-label="Search"
+            id="chr_input">
       </div>
     </div>
 
@@ -54,11 +48,19 @@
         <ul id="gwas_list">
         </ul>
       </div>
+      <div class="col-4">
+        <ul id="tf_list">
+        </ul>
+      </div>
+      <div class="col-4">
+        <ul id="chr_list">
+        </ul>
+      </div>
     </div>
     <div class="row mt-5">
       <div class="col-4 align-items-start">
         <button class="btn d-flex" style="background-color: #00CED1;" type="submit" onclick="deleteGenes()">Delete
-          GWAS</button>
+          Input</button>
       </div>
       <div class="col-4">
         <button class="btn d-flex" style="background-color: #063944; color: #fff; border-color: #063944" type="button"
@@ -119,6 +121,8 @@
 
 <script>
   let gwas_list = [];
+  let chr_list = [];
+  let tf_list = [];
   $(function () {
     var availableTags = [
       {% for gwas in gwases %}
@@ -142,6 +146,60 @@
       let list = document.getElementById("gwas_list");
       makeButtonGroup(gwas_list.slice(-1), list);
       document.getElementById('gwas_input').value = "";
+      return false;
+    },
+
+  });
+    });
+
+
+  $(function () {
+    var chrTags = [
+      {% for chr in chrs %}
+            "{{chr}}",
+    {% endfor %}
+    ];
+
+  $("#chr_input").autocomplete({
+    source: function (request, response) {
+      var results = $.ui.autocomplete.filter(chrTags, request.term);
+
+      response(results.slice(0, 1000));
+    },
+
+    select: function (event, ui) {
+      chr_list.push(ui.item.value);
+      console.log(chr_list);
+      let list = document.getElementById("chr_list");
+      makeButtonGroup(chr_list.slice(-1), list);
+      document.getElementById('chr_input').value = "";
+      return false;
+    },
+
+  });
+    });
+
+
+  $(function () {
+    var tfTags = [
+      {% for tf in tfs %}
+            "{{tf.name}}",
+    {% endfor %}
+    ];
+
+  $("#tf_input").autocomplete({
+    source: function (request, response) {
+      var results = $.ui.autocomplete.filter(tfTags, request.term);
+
+      response(results.slice(0, 1000));
+    },
+
+    select: function (event, ui) {
+      tf_list.push(ui.item.value);
+      console.log(tf_list);
+      let list = document.getElementById("tf_list");
+      makeButtonGroup(tf_list.slice(-1), list);
+      document.getElementById('tf_input').value = "";
       return false;
     },
 
@@ -173,24 +231,6 @@
 
 </script>
 
-<script>
-  function getSelectValues(select) {
-    var result = [];
-    var options = select && select.options;
-    var opt;
-
-    for (var i = 0, iLen = options.length; i < iLen; i++) {
-      opt = options[i];
-
-      if (opt.selected) {
-        result.push(opt.value || opt.text);
-      }
-    }
-    return result;
-  }
-</script>
-
-
 <script>function fillGenes() {
     let response = "{% url 'draftapp:Gwas_search_results_dict'%}" + "?gwas[]="
     gwas_list.forEach((gwas, index) => {
@@ -198,27 +238,34 @@
       response += gwas
     })
 
-    let tf = document.getElementById('tf')
-    let tfs = getSelectValues(tf)
-    tfs.forEach((tf, index) => {
+    tf_list.forEach((tf, index) => {
       if (index >= 0) { response += "&tf[]=" }
       response += tf
     })
 
-    let chr = document.getElementById('chr')
-    let chrs = getSelectValues(chr)
-    chrs.forEach((chr, index) => {
+
+    chr_list.forEach((chr, index) => {
       if (index >= 0) { response += "&chromosome[]=" }
       response += chr
     })
+
 
     window.location.href = response
   }</script>
 
 <script>function deleteGenes() {
+    //delete GWAS input
     document.getElementById("gwas_list").innerHTML = "";
     gwas_list = [];
     document.getElementById('gwas_input').value = "";
+    //delete Tf input
+    document.getElementById("tf_list").innerHTML = "";
+    tf_list = [];
+    document.getElementById('tf_input').value = "";
+    //delete chr input
+    document.getElementById("chr_list").innerHTML = "";
+    chr_list = [];
+    document.getElementById('chr_input').value = "";
   }</script>
 
 
@@ -245,19 +292,6 @@
   }
 </script>
 
-<script>
-
-  new MultiSelectTag('tf', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'transcription factors',  // default Search...
-  })
-  new MultiSelectTag('chr', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'chromosome',  // default Search...
-  })
-</script>
 
 
 <style>
