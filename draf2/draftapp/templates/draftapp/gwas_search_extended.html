@@ -81,6 +81,17 @@
         <input type="file" accept=".txt, .csv" id="gwas_file">
       </div>
     </div>
+    <div class="row h-50 mt-5">
+      <div class="col-md">
+        <h5>Click here for an exemplary usage of the GWAS query:</h5>
+    </div>
+    <div class="row h-100">
+    <div class="col-2 align-self-start">
+      <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
+        id="exemplary_query" onclick="exemplaryGeneQuery()">Example
+        Query</button>
+    </div>
+  </div>
 
 
   </div>
@@ -94,7 +105,7 @@
   integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 <script>
-  function makeButtonGroup(gwas, list) {
+  function makeButtonGroup(gwas, list, input_list) {
     let group = document.createElement('btn-group');
     let li = document.createElement('button');
     let x = document.createElement('button');
@@ -105,9 +116,9 @@
     x.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>';
     const isThisElement = (element) => element == li.innerText;
     x.onclick = function () {
-      gwas_index = gwas_list.findIndex(isThisElement);
+      gwas_index = input_list.findIndex(isThisElement);
       if (gwas_index != -1) {
-        gwas_list.splice(gwas_index, 1)
+        input_list.splice(gwas_index, 1)
       };
       li.remove();
       x.remove();
@@ -144,7 +155,7 @@
       gwas_list.push(ui.item.value);
       console.log(gwas_list);
       let list = document.getElementById("gwas_list");
-      makeButtonGroup(gwas_list.slice(-1), list);
+      makeButtonGroup(gwas_list.slice(-1), list, gwas_list);
       document.getElementById('gwas_input').value = "";
       return false;
     },
@@ -171,7 +182,7 @@
       chr_list.push(ui.item.value);
       console.log(chr_list);
       let list = document.getElementById("chr_list");
-      makeButtonGroup(chr_list.slice(-1), list);
+      makeButtonGroup(chr_list.slice(-1), list, chr_list);
       document.getElementById('chr_input').value = "";
       return false;
     },
@@ -198,7 +209,7 @@
       tf_list.push(ui.item.value);
       console.log(tf_list);
       let list = document.getElementById("tf_list");
-      makeButtonGroup(tf_list.slice(-1), list);
+      makeButtonGroup(tf_list.slice(-1), list, tf_list);
       document.getElementById('tf_input').value = "";
       return false;
     },
@@ -232,24 +243,24 @@
 </script>
 
 <script>function fillGenes() {
+  //url
     let response = "{% url 'draftapp:Gwas_search_results_dict'%}" + "?gwas[]="
+    //add each GWAS term
     gwas_list.forEach((gwas, index) => {
       if (index > 0) { response += "&gwas[]=" }
       response += gwas
     })
-
+//add each TF
     tf_list.forEach((tf, index) => {
       if (index >= 0) { response += "&tf[]=" }
       response += tf
     })
-
-
+//add each chromosome
     chr_list.forEach((chr, index) => {
       if (index >= 0) { response += "&chromosome[]=" }
       response += chr
     })
-
-
+//set new location to url
     window.location.href = response
   }</script>
 
@@ -270,26 +281,31 @@
 
 
 <script>function exemplaryGeneQuery() {
-    gwas_list = ["atherosclerosis"];
+    glist = ["atherosclerosis", "estrogen-receptor negative breast cancer"];
+    glist.forEach((gwas, index) => {
+      if (index >= 0) { gwas_list.push(gwas) }
+    });
     let list = document.getElementById("gwas_list");
     for (const gwas of gwas_list.values()) {
-      makeButtonGroup(gwas, list);
-    }
-
+      console.log(gwas);
+      makeButtonGroup(gwas, list, gwas_list);
+    };
+    console.log(gwas_list);
+    console.log(document.getElementById("gwas_list"));
 
     /*tf_list = ["AIRE", "EBF3", "ZBTB6"];
-      let list = document.getElementById("gwas_list");
-      for (const gwas of gwas_list.values()) {
-        makeButtonGroup(gwas, list);
-      }
+      let tlist = document.getElementById("tf_list");
+      for (const tf of tf_list.values()) {
+        makeButtonGroup(gwas, tlist, tf_list);
+      };
     
   
     chr_list = ["chr11", "chr12"];
-      let list = document.getElementById("gwas_list");
-      for (const gwas of gwas_list.values()) {
-        makeButtonGroup(gwas, list);
+      let clist = document.getElementById("chr_list");
+      for (const chrom of chr_list.values()) {
+        makeButtonGroup(chrom, clist, chr_list);
       }*/
-  }
+  };
 </script>
 
 
