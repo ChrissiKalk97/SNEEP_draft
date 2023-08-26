@@ -9,68 +9,66 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
 
-<div class = "container-fluid">
-<div class="container">
-  <div class="row h-200">
-    <div class="col-4">
-      <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
+<div class="container-fluid">
+  <div class="container">
+    <div class="row h-200">
+      <div class="col-4">
+        <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
+      </div>
+      <div class="col-4">
+        <h4>Query rSNPs for a transcription factor:</h2>
+      </div>
+      <div class="col-4">
+        <h4>Query rSNPs of a chromosome:</h2>
+      </div>
     </div>
-    <div class="col-4">
-      <h4>Query rSNPs for a transcription factor:</h2>
-    </div>
-    <div class="col-4">
-      <h4>Query rSNPs of a chromosome:</h2>
+
+
+
+
+    <div class="row input-group">
+      <form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+        <div class="col-4">
+          <select name="gwas[]" id="gwas" class="gwas" multiple>
+            {%for gwas in gwases%}
+            <option value="{{gwas.name}}"> {{gwas.name}}</option>
+            {% endfor %}
+            {%for gwas in gwases%}
+            <option value="{{gwas.efoid}}"> {{gwas.efoid}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+
+        <div class="col-4">
+          <select name="tf[]" id="tf" class="tf" multiple>
+            {%for tf in tfs%}
+            <option value="{{tf.name}}"> {{tf.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-4">
+          <select name="chromosome[]" id="chr" class="chr" multiple>
+            {%for CHR in chrs%}
+            <option value="{{CHR}}"> {{CHR}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+        <div class="row h-100 mt-5">
+          <div class="col-4 mx-auto">
+            <button class="btn d-flex search" style="background-color: #063944; color: #fff; border-color: #063944"
+              type="submit">Search</button>
+      </form>
     </div>
   </div>
-
-
-
-
-  <div class="row input-group">
-    <form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
-
-      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-      <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-
-      <div class="col-4">
-        <select name="gwas[]" id="gwas" class="gwas" multiple>
-
-          {%for gwas in gwases%}
-          <option value="{{gwas.name}}"> {{gwas.name}}</option>
-          {% endfor %}
-          {%for gwas in gwases%}
-          <option value="{{gwas.efoid}}"> {{gwas.efoid}}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-
-
-      <div class="col-4">
-        <select name="tf[]" id="tf" class="tf" multiple>
-
-          {%for tf in tfs%}
-          <option value="{{tf.name}}"> {{tf.name}}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-4">
-        <select name="chromosome[]" id="chr" class="chr" multiple>
-
-          {%for CHR in chrs%}
-          <option value="{{CHR}}"> {{CHR}}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-
-      <div class="row h-100 mt-5">
-        <div class="col-4 mx-auto">
-          <button class="btn d-flex search" style="background-color: #063944; color: #fff; border-color: #063944" type="submit">Search</button>
-    </form>
-  </div>
-</div>
 
 </div>
 </div>
@@ -106,22 +104,32 @@
     location.reload();
 
   }</script>
-<button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left' style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
+<button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left'
+  style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
   Query</button>
 </div>
 
 <style>
-  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
+  .exemplary_query:hover,
+  .exemplary_query:focus,
+  .exemplary_query:active,
+  .exemplary_query.active,
+  .open>.dropdown-toggle.exemplary_query {
     color: #fff !important;
     background-color: #063944 !important;
-    border-color: #063944 !important; /*set the color you want here*/
-}
-.search:hover, .search:focus, .search:active, .search.active, .open>.dropdown-toggle.search {
-  color: #063944 !important;
-    background-color: white !important;
-    border-color: #063944 !important; /*set the color you want here*/
-}
+    border-color: #063944 !important;
+    /*set the color you want here*/
+  }
 
+  .search:hover,
+  .search:focus,
+  .search:active,
+  .search.active,
+  .open>.dropdown-toggle.search {
+    color: #063944 !important;
+    background-color: white !important;
+    border-color: #063944 !important;
+    /*set the color you want here*/
+  }
 </style>
 {% endblock %}
-
