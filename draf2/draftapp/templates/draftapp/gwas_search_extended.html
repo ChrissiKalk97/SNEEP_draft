@@ -90,7 +90,7 @@
       <div class="row h-100">
         <div class="col-2 align-self-start">
           <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left"
-            style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGwasQuery()">Example
+            style="background-color: #e3e6e6;" id="exemplary_query" type="button" onclick="exemplaryGwasQuery()">Example
             Query</button>
         </div>
       </div>
@@ -146,7 +146,6 @@
   $("#gwas_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(availableTags, request.term);
-
       response(results.slice(0, 1000));
     },
 
@@ -172,7 +171,6 @@
   $("#chr_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(chrTags, request.term);
-
       response(results.slice(0, 1000));
     },
 
