@@ -29,7 +29,7 @@ function MultiSelectTag(
                         t.shadow&&i.classList.add("shadow")
                         ,t.rounded&&i.classList.add("rounded")
                         ,(o=document.createElement("div")).classList.add("input-container"),
-                        (r=document.createElement("input")).classList.add("input"),r.placeholder=`${t.placeholder||"Search..."}`,
+                        (r=document.createElement("input")).classList.add("input"),r.placeholder=`${t.placeholder||"Search..."}`,r.id=`${t.id||"typedInput"}`,
                         (c=document.createElement("inputBody")).classList.add("input-body"),c.append(r),i.append(o),
                         (s=document.createElement("div")).classList.add("btn-container"),
                         (u=document.createElement("button")).type="button",
