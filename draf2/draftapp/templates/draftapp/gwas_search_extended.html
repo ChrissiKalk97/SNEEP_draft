@@ -1,13 +1,16 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
+{% load static %}
 
 
 
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
-<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
+<script src="{% static 'js/multiselect.js' %}"></script>
 
 <div class = "container-fluid">
 <div class="container">
@@ -29,8 +32,7 @@
   <div class="row input-group">
     <form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
 
-      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-      <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+     
 
       <div class="col-4">
         <select name="gwas[]" id="gwas" class="gwas" multiple>
