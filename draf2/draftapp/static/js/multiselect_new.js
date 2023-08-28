@@ -84,12 +84,13 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         // .input-container
         inputContainer = document.createElement('div')
         inputContainer.classList.add('input-container')
+        inputContainer.id=`${customs.container_id}`
 
         // input
         input = document.createElement('input')
         input.classList.add('input')
         input.placeholder = `${customs.placeholder || 'Search...'}`
-        input.id=`${customs.id}`
+        input.id=`${customs.input_id}`
 
         inputBody = document.createElement('inputBody')
         inputBody.classList.add('input-body')
@@ -246,22 +247,32 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
 
 
 
-function updateMultiSelectTag (el, options, ul_name){
+
+
+
+
+function updateMultiSelectTag (el, options, ul_name, input_container_id, input_id){
     
     let element = document.getElementById(el)
     let ul = document.getElementById(ul_name)
+    let inputContainer = document.getElementById(input_container_id);
+    let input = document.getElementById(input_id);
+    customs = element.customs;
     initOptions()
     enableItemSelection()
+    assignOptions()
+    console.log(element.options)
     setValues(false)
+    
    
 
     function initOptions(val = null) {
         ul.innerHTML = ''
         for (var option of options) {
-            if (option.selected) {
+            /*if (option.selected) {
                 !isTagSelected(option.value) && createTag(option)
             }
-            else {
+            else {*/
                 const li = document.createElement('li')
                 li.innerHTML = option.label
                 li.dataset.value = option.value
@@ -273,7 +284,7 @@ function updateMultiSelectTag (el, options, ul_name){
                 else if(!val) {
                     ul.appendChild(li)
                 }
-            }
+            
         }
     }
 
@@ -316,7 +327,23 @@ function updateMultiSelectTag (el, options, ul_name){
         }
     }
 
-    function isTagSelected(val) {
+
+    function setValues(fireEvent=true) {
+        // Update element final values
+        selected_values = []
+        for(var i = 0; i < options.length; i++) {
+            element.options[i].selected = options[i].selected
+            if(options[i].selected) {
+                selected_values.push({label: options[i].label, value: options[i].value})
+            }
+        }
+        if (fireEvent && customs.hasOwnProperty('onChange')) {
+            customs.onChange(selected_values)
+        }
+    }
+
+
+  function isTagSelected(val) {
         // If the item is already selected
         for(var child of inputContainer.children) {
             if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
@@ -333,32 +360,30 @@ function updateMultiSelectTag (el, options, ul_name){
             }
         }
     }
-    function setValues(fireEvent=true) {
-        // Update element final values
-        selected_values = []
-        for(var i = 0; i < options.length; i++) {
-            element.options[i].selected = options[i].selected
-            if(options[i].selected) {
-                selected_values.push({label: options[i].label, value: options[i].value})
-            }
-        }
-        if (fireEvent && customs.hasOwnProperty('onChange')) {
-            customs.onChange(selected_values)
-        }
-    }
+
+    
     //probably need to pass the options to element.options somehow
     //how were they given in the original code???
-    /*function getOptions() {
+    function assignOptions() {
+        function createOption(option) {
+            var option = document.createElement("option");
+            option.setAttribute("value", option.label);
+            option.setAttribute("label", option.label);
+            option.setAttribute("selected", "false");
+            option.innerHTML = option.label;
+      
+            return option;
+      }
+      
         // Map element options
-        return [...element.options].map((op) => {
-            return {
-                value: op.value,
-                label: op.label,
-                selected: op.selected,
-            }
-        })
-    }*/
+        for (let opt of options) {
+            console.log("optlabel");
+            console.log(opt.label);
+            element.options.add(createOption(opt));
+        }
+        
+    }
 }
    
-}
+
 
