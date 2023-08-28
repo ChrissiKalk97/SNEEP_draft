@@ -132,9 +132,9 @@
       for (const array of results["data"]) {
         gene_list = gene_list.concat(array);
       };
-    console.log(gene_list); 
-  };
-    
+      console.log(gene_list);
+    };
+
     reader.onerror = function () {
       alert('Unable to read ' + file.fileName);
     };
@@ -144,12 +144,14 @@
 
 
 <script>function fillGenes() {
+    //url
     let response = "{% url 'draftapp:gene_search_results'%}" + "?genes="
+    //add genes to url
     gene_list.forEach((gene, index) => {
       if (index > 0) { response += "," }
       response += gene
     })
-
+    //set new location to url
     window.location.href = response
   }</script>
 
@@ -165,18 +167,22 @@
     let list = document.getElementById("gene_list");
     for (const gene of gene_list.values()) {
       makeButtonGroup(gene, list);
-    };  
+    };
   }
 </script>
 
 
 
 <style>
-  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
+  .exemplary_query:hover,
+  .exemplary_query:focus,
+  .exemplary_query:active,
+  .exemplary_query.active,
+  .open>.dropdown-toggle.exemplary_query {
     color: #fff !important;
     background-color: #063944 !important;
     border-color: #063944 !important;
-}
+  }
 
 
   .container {

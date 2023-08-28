@@ -1,12 +1,10 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
-<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
 
 <div class="container">
   <div class="container">
-
+    <!-- Input captions-->
     <div class="row h-200">
       <div class="col-4">
         <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
@@ -21,7 +19,7 @@
 
 
 
-
+    <!-- Input fileds with autocomplete-->
     <div class="row input-group">
       <div class="col-4">
         <form class="d-flex" role="search">
@@ -42,7 +40,7 @@
       </div>
     </div>
 
-
+    <!-- Buttons of selected gwas, tf and chr -->
     <div class="row mt-5">
       <div class="col-4">
         <ul id="gwas_list" style="list-style-type:none;">
@@ -57,6 +55,8 @@
         </ul>
       </div>
     </div>
+
+    <!-- Delete and submit option -->
     <div class="row mt-5">
       <div class="col-4 align-items-start">
         <button class="btn d-flex" style="background-color: #00CED1;" type="submit" onclick="deleteGenes()">Delete
@@ -69,7 +69,7 @@
     </div>
 
 
-
+    <!-- File upload -->
     <div class="row h-100 mt-5">
       <div class="col-md">
         <h4>Or enter a .txt file of GWAS traits or EFOIDs:</h4>
@@ -81,21 +81,21 @@
         <input type="file" accept=".txt, .csv" id="gwas_file">
       </div>
     </div>
+
+    <!-- Exemplary Query -->
     <div class="row h-50 mt-5">
       <div class="col-md">
         <h5>Click here for an exemplary usage of the GWAS query:</h5>
-    </div>
-    <div class="row h-100">
-    <div class="col-2 align-self-start">
-      <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
-        id="exemplary_query" onclick="exemplaryGeneQuery()">Example
-        Query</button>
+      </div>
+      <div class="row h-100">
+        <div class="col-2 align-self-start">
+          <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left"
+            style="background-color: #e3e6e6;" id="exemplary_query" type="button" onclick="exemplaryGwasQuery()">Example
+            Query</button>
+        </div>
+      </div>
     </div>
   </div>
-
-
-  </div>
-</div>
 </div>
 
 
@@ -146,13 +146,11 @@
   $("#gwas_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(availableTags, request.term);
-
       response(results.slice(0, 1000));
     },
 
     select: function (event, ui) {
       gwas_list.push(ui.item.value);
-      console.log(gwas_list);
       let list = document.getElementById("gwas_list");
       makeButtonGroup(gwas_list.slice(-1), list, gwas_list);
       document.getElementById('gwas_input').value = "";
@@ -172,7 +170,6 @@
   $("#chr_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(chrTags, request.term);
-
       response(results.slice(0, 1000));
     },
 
@@ -240,25 +237,54 @@
 
 </script>
 
+<script>function exemplaryGwasQuery() {
+    gwas_list = ["atherosclerosis", "estrogen-receptor negative breast cancer"];
+    console.log(gwas_list);
+    let list = document.getElementById("gwas_list");
+    for (const gwas of gwas_list.values()) {
+      console.log(gwas);
+      makeButtonGroup(gwas, list, gwas_list);
+      console.log(document.getElementById("gwas_list"));
+    };
+    console.log(gwas_list);
+    console.log(document.getElementById("gwas_list"));
+
+    /*tf_list = ["AIRE", "EBF3", "ZBTB6"];
+      let tlist = document.getElementById("tf_list");
+      for (const tf of tf_list.values()) {
+        makeButtonGroup(gwas, tlist, tf_list);
+      };
+    
+  
+    chr_list = ["chr11", "chr12"];
+      let clist = document.getElementById("chr_list");
+      for (const chrom of chr_list.values()) {
+        makeButtonGroup(chrom, clist, chr_list);
+      }*/
+  };
+</script>
+
+
 <script>function fillGenes() {
-  //url
+    console.log(gwas_list);
+    //url
     let response = "{% url 'draftapp:Gwas_search_results_dict'%}" + "?gwas[]="
     //add each GWAS term
     gwas_list.forEach((gwas, index) => {
       if (index > 0) { response += "&gwas[]=" }
       response += gwas
     })
-//add each TF
+    //add each TF
     tf_list.forEach((tf, index) => {
       if (index >= 0) { response += "&tf[]=" }
       response += tf
     })
-//add each chromosome
+    //add each chromosome
     chr_list.forEach((chr, index) => {
       if (index >= 0) { response += "&chromosome[]=" }
       response += chr
     })
-//set new location to url
+    //set new location to url
     window.location.href = response
   }</script>
 
@@ -278,33 +304,6 @@
   }</script>
 
 
-<script>function exemplaryGeneQuery() {
-    let glist = ["atherosclerosis", "estrogen-receptor negative breast cancer"];
-    gwas_list.length = 0;                  // Clear contents
-    gwas_list.push.apply(gwas_list, glist);  // Append new contents
-    console.log(gwas_list);
-    let list = document.getElementById("gwas_list");
-    for (const gwas of gwas_list.values()) {
-      console.log(gwas);
-      makeButtonGroup(gwas, list, gwas_list);
-    };
-    console.log(gwas_list);
-    console.log(document.getElementById("gwas_list"));
-
-    /*tf_list = ["AIRE", "EBF3", "ZBTB6"];
-      let tlist = document.getElementById("tf_list");
-      for (const tf of tf_list.values()) {
-        makeButtonGroup(gwas, tlist, tf_list);
-      };
-    
-  
-    chr_list = ["chr11", "chr12"];
-      let clist = document.getElementById("chr_list");
-      for (const chrom of chr_list.values()) {
-        makeButtonGroup(chrom, clist, chr_list);
-      }*/
-  };
-</script>
 
 
 
