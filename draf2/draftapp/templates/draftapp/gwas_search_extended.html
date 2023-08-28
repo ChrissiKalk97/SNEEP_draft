@@ -10,7 +10,7 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
-<script src="{% static 'js/multiselect.js' %}"></script>
+<script src="{% static 'js/multiselect_new.js' %}"></script>
 
 <div class = "container-fluid">
 <div class="container">
@@ -36,13 +36,6 @@
 
       <div class="col-4">
         <select name="gwas[]" id="gwas" class="gwas" multiple>
-
-          {%for gwas in gwases%}
-          <option value="{{gwas.name}}"> {{gwas.name}}</option>
-          {% endfor %}
-          {%for gwas in gwases%}
-          <option value="{{gwas.efoid}}"> {{gwas.efoid}}</option>
-          {% endfor %}
         </select>
       </div>
 
@@ -50,7 +43,6 @@
 
       <div class="col-4">
         <select name="tf[]" id="tf" class="tf" multiple>
-
           {%for tf in tfs%}
           <option value="{{tf.name}}"> {{tf.name}}</option>
           {% endfor %}
@@ -59,7 +51,6 @@
 
       <div class="col-4">
         <select name="chromosome[]" id="chr" class="chr" multiple>
-
           {%for CHR in chrs%}
           <option value="{{CHR}}"> {{CHR}}</option>
           {% endfor %}
@@ -98,10 +89,54 @@
     shadow: true,      // default false
     placeholder: 'gwas',  // default Search...
     id: "gwas_input", 
+    list_id: "gwas_options",
+    multiselect_id: "gwas_multi",
   })
 </script>
 
+<script>
+  let gwas_options = [];
+  $(function () {
+    var availableTags = [
+    {%for gwas in gwases%}
+            "{{gwas.name}}",
+    {% endfor %}
+    {%for gwas in gwases%}
+            "{{gwas.efoid}}",
+    {% endfor %}
+    ];
 
+    $("#gwas_input").autocomplete({
+    source: function (request, response) {
+      var results = $.ui.autocomplete.filter(availableTags, request.term);
+      //var str = "";
+      gwas_options = results.slice(0, 4);
+      gwas_options.forEach((gwas, index) => {
+      if (index > 0) { this.value = gwas, this.label = gwas, this.selected = "false"} 
+    });
+    console.log(gwas_options);
+    console.log(document.getElementById('gwas_options'));
+      updateMultiSelectTag('gwas', gwas_options, 'gwas_options');
+     /* for (var item of results.slice(0, 4)) {
+        
+
+        //let n=document.createElement("li");
+        let o=document.createElement("option");
+        #o.value = item;
+        o.innerHTML = item;
+        let newOption = new Option(item,item);
+        const select = document.querySelector('select'); 
+        select.add(newOption,undefined);
+        location.reload;*/
+        //n.appendChild(o);
+        //$("#gwas").appendChild(o);
+     }});
+      //document.getElementById("selected_gwas").innerHTML = str;*/
+      //response(results.slice(0, 4));
+    //}, 
+   
+  });
+</script>
 
 <script>
   function exemplaryGeneQuery() {
