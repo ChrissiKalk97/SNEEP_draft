@@ -80,6 +80,15 @@
       </div>
     </div>
 
+    <div class="row h-100 mt-5"></div>
+    <div class="col-2 align-self-start">
+      <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
+        id="exemplary_query" type="button" onclick="exemplaryGwasQuery()">Example
+        Query</button>
+    </div>
+  </div>
+    
+
 
   </div>
 </div>
@@ -222,26 +231,13 @@
   }</script>
 
 
-<script>function exemplaryGeneQuery() {
+<script>function exemplaryGwasQuery() {
     gwas_list = ["atherosclerosis"];
     let list = document.getElementById("gwas_list");
     for (const gwas of gwas_list.values()) {
       makeButtonGroup(gwas, list);
     }
-
-
-    /*tf_list = ["AIRE", "EBF3", "ZBTB6"];
-      let list = document.getElementById("gwas_list");
-      for (const gwas of gwas_list.values()) {
-        makeButtonGroup(gwas, list);
-      }
     
-  
-    chr_list = ["chr11", "chr12"];
-      let list = document.getElementById("gwas_list");
-      for (const gwas of gwas_list.values()) {
-        makeButtonGroup(gwas, list);
-      }*/
   }
 </script>
 
