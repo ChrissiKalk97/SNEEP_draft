@@ -278,7 +278,7 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
         console.log("init options")
         ul.innerHTML = ''
         for (var option of options) {
-            if (option.selected) {
+            if (option.selected && option.label) {
                 !isTagSelected(option.value) && createTag(option)
             }
             else {
@@ -396,14 +396,18 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
             option.setAttribute("selected", opt.selected);}
             option.innerHTML = opt.label;
             return option;
-      }
+        }
         //element.options.length = 0;
         // Map element options
         for (let opt of options) {
             if ($("#"+el+" option:contains('"+opt.value+"')").length == 0){
             element.options.add(createOption(opt));
-            console.log("created opts", element.options);}
-        }  
+            }
+       
+        else if(opt.selected && opt.label){
+            document.getElementById(opt.label).selected = opt.selected
+            console.log("selected!!", document.getElementById(opt.label))
+        }  } 
     }
 }
    
