@@ -78,7 +78,6 @@
 
 
 <script>
-  let gene_list = [];
   $(function () {
     var availableTags = [
       {% for gene in genes %}
@@ -111,7 +110,7 @@
 </script>
 
 <script>
-
+  let gene_list = [];
   document.getElementById('gene_file').addEventListener('change', upload, false);
   function upload(evt) {
     var data = null;
@@ -125,17 +124,20 @@
         gene_list = gene_list.concat(array);
       };
       console.log(gene_list);
+      let gene_opt = [];
+      gene_list.forEach((gene, index) =>  {if (index >= 0) { let ge = {}; ge.value = gene, ge.label = gene, ge.selected = "selected"; gene_opt.push(ge)} });
+      new updateMultiSelectTag('genes', gene_opt, {
+        rounded: true,    // default true
+        shadow: true,      // default false
+        ul_name: 'gene_options',
+        input_container_id: "gene_container",
+        input_id: "gene_input"});
     };
-
     reader.onerror = function () {
       alert('Unable to read ' + file.fileName);
     };
   };
-
 </script>
-
-
-
 
 
 
