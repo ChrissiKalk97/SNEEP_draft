@@ -36,6 +36,8 @@
 
       <div class="col-4">
         <select name="gwas[]" id="gwas" class="gwas" multiple>
+          <option value="atherosclerosis" id = "atherosclerosis" label = "atherosclerosis"> atherosclerosis</option>
+          <option value="estrogen-receptor negative breast cancer" id ="estrogen-receptor negative breast cancer"  > estrogen-receptor negative breast cancer</option>
         </select>
       </div>
 
@@ -110,50 +112,33 @@
     $("#gwas_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(availableTags, request.term);
-      //var str = "";
       gwas_options = results.slice(0, 4);
       let gwa_opt = [];
       gwas_options.forEach((gwas, index) => {
       if (index >= 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas; gwa_opt.push(gwa)} 
     });
-    /*console.log(gwa_opt);
-    console.log(gwas_options);
-    console.log(document.getElementById('gwas_options'));*/
       new updateMultiSelectTag('gwas', gwa_opt, {
         rounded: true,    // default true
         shadow: true,      // default false
         ul_name: 'gwas_options',
         input_container_id: "gwas_container",
         input_id: "gwas_input"});
-     /* for (var item of results.slice(0, 4)) {
-        
-
-        //let n=document.createElement("li");
-        let o=document.createElement("option");
-        #o.value = item;
-        o.innerHTML = item;
-        let newOption = new Option(item,item);
-        const select = document.querySelector('select'); 
-        select.add(newOption,undefined);
-        location.reload;*/
-        //n.appendChild(o);
-        //$("#gwas").appendChild(o);
      }});
-      //document.getElementById("selected_gwas").innerHTML = str;*/
-      //response(results.slice(0, 4));
-    //}, 
-   
   });
 </script>
 
+
 <script>
   function exemplaryGeneQuery() {
-    $('#gwas').val(["atherosclerosis"]);
     $('#tf').val(["AIRE", "EBF3", "ZBTB6"]);
     $('#chr').val(["chr11", "chr12"]);
+    $('#gwas').val(["estrogen-receptor negative breast cancer", "atherosclerosis"]);
     location.reload();
-
-  }</script>
+   
+   
+    console.log($("#gwas"));
+  }
+    </script>
 <button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left' style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
   Query</button>
 </div>
@@ -172,4 +157,5 @@
 
 </style>
 {% endblock %}
+
 

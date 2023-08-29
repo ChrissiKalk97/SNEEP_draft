@@ -23,20 +23,20 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     function init() {
         element = document.getElementById(el)
         createElements()
-        //initOptions()
-        //enableItemSelection()
-        //setValues(false)
+        initOptions()
+        enableItemSelection()
+        setValues(false)
 
         button.addEventListener('click', () => {
             if(drawer.classList.contains('hidden')) {
-                //initOptions()
-                //enableItemSelection()
+                initOptions()
+                enableItemSelection()
                 drawer.classList.remove('hidden')
                 input.focus()
             }
         })
 
-       /* input.addEventListener('keyup', (e) => {
+       input.addEventListener('keyup', (e) => {
                 initOptions(e.target.value)
                 enableItemSelection()
         })
@@ -50,7 +50,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
                 setValues()
             }
             
-        })*/
+        })
         
         window.addEventListener('click', (e) => {   
             if (!customSelectContainer.contains(e.target)){
