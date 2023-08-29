@@ -251,28 +251,28 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
 
 
 
-function updateMultiSelectTag (el, options, ul_name, input_container_id, input_id){
+function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:true}){
     
-    let element = document.getElementById(el)
-    let ul = document.getElementById(ul_name)
-    let inputContainer = document.getElementById(input_container_id);
-    let input = document.getElementById(input_id);
-    customs = element.customs;
-    initOptions()
-    enableItemSelection()
-    assignOptions()
-    console.log(element.options)
-    setValues(false)
+        let element = document.getElementById(el)
+        let ul = document.getElementById(`${customs.ul_name}`)
+        let inputContainer = document.getElementById(`${customs.input_container_id}`);
+        let input = document.getElementById(`${customs.input_id}`);
+        //customs = element.customs;
+        if (options.length > 0){
+        assignOptions()
+        initOptions()
+        enableItemSelection()
+        setValues(false)}
     
    
 
     function initOptions(val = null) {
         ul.innerHTML = ''
         for (var option of options) {
-            /*if (option.selected) {
+            if (option.selected) {
                 !isTagSelected(option.value) && createTag(option)
             }
-            else {*/
+            else {
                 const li = document.createElement('li')
                 li.innerHTML = option.label
                 li.dataset.value = option.value
@@ -286,7 +286,7 @@ function updateMultiSelectTag (el, options, ul_name, input_container_id, input_i
                 }
             
         }
-    }
+    }}
 
     function createTag(option) {
         // Create and show selected item as tag
@@ -328,7 +328,7 @@ function updateMultiSelectTag (el, options, ul_name, input_container_id, input_i
     }
 
 
-    function setValues(fireEvent=true) {
+    function setValues() {//fireEvent=true
         // Update element final values
         selected_values = []
         for(var i = 0; i < options.length; i++) {
@@ -337,9 +337,9 @@ function updateMultiSelectTag (el, options, ul_name, input_container_id, input_i
                 selected_values.push({label: options[i].label, value: options[i].value})
             }
         }
-        if (fireEvent && customs.hasOwnProperty('onChange')) {
+        /*if (fireEvent && customs.hasOwnProperty('onChange')) {
             customs.onChange(selected_values)
-        }
+        }*/
     }
 
 
@@ -365,23 +365,23 @@ function updateMultiSelectTag (el, options, ul_name, input_container_id, input_i
     //probably need to pass the options to element.options somehow
     //how were they given in the original code???
     function assignOptions() {
-        function createOption(option) {
+        function createOption(opt) {
             var option = document.createElement("option");
-            option.setAttribute("value", option.label);
-            option.setAttribute("label", option.label);
-            option.setAttribute("selected", "false");
-            option.innerHTML = option.label;
-      
+            option.setAttribute("value", opt.label);
+            option.setAttribute("label", opt.label);
+            option.setAttribute("selected", false);
+            option.innerHTML = opt.label;
             return option;
       }
-      
+        //element.options.length = 0;
         // Map element options
         for (let opt of options) {
             console.log("optlabel");
-            console.log(opt.label);
+            console.log(opt.label);console.log(createOption(opt));
+            console.log(opt);
             element.options.add(createOption(opt));
-        }
-        
+            console.log(element.options);
+        }  
     }
 }
    

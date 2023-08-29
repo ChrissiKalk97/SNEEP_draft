@@ -114,12 +114,17 @@
       gwas_options = results.slice(0, 4);
       let gwa_opt = [];
       gwas_options.forEach((gwas, index) => {
-      if (index > 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas, gwa.selected = "false"; gwa_opt.push(gwa)} 
+      if (index >= 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas, gwa.selected = false; gwa_opt.push(gwa)} 
     });
     /*console.log(gwa_opt);
     console.log(gwas_options);
     console.log(document.getElementById('gwas_options'));*/
-      updateMultiSelectTag('gwas', gwa_opt, 'gwas_options', "gwas_container", "gwas_input");
+      new updateMultiSelectTag('gwas', gwa_opt, {
+        rounded: true,    // default true
+        shadow: true,      // default false
+        ul_name: 'gwas_options',
+        input_container_id: "gwas_container",
+        input_id: "gwas_input"});
      /* for (var item of results.slice(0, 4)) {
         
 
