@@ -67,8 +67,8 @@ def gene_query(query):
             
 def gene_search_results_snps(request):
     if request.method == 'GET':
-        query = request.GET.get('genes')
-        query = query.split(",")
+        if request.method == 'GET':
+            query = request.GET.getlist('genes[]')
         if query:
             gene_dict, hits, no_hits = gene_query(query)
             no_hits = ", ".join(no_hits)
