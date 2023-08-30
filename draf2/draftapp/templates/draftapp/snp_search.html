@@ -1,123 +1,117 @@
 {% extends "draftapp/base.html" %}
 {% block body%}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
+<script src="{% static 'js/multiselect_new.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 
 <div class="container">
   <div class="row h-200">
     <div class="col-12">
       <h4>Query SNEEP databank for rSNPs:</h4>
     </div>
-    <div class="row input-group text-center">
-      <div class="col-2">
-        <form class="d-flex" role="search">
-          <input class="form-control me-2 d-flex" type="search" name="snps" placeholder="snps" aria-label="Search"
-            id="snp_input">
-      </div>
-
-      <div class="col-md">
-        <button class="btn d-flex" style="background-color: #00CED1;" type="button"
-          onclick="fillGenes()">Search</button>
-        </form>
-      </div>
+    <div class="row input-group">
+      <form action="{% url 'draftapp:snp_search_results'%}" method="get" class="d-flex" role="search">
 
 
 
-      <div class="col-10 float-right">
-        <ul id="snp_list" style="list-style-type:square;">
-        </ul>
-      </div>
+        <div class="col-4">
+          <select name="snps[]" id="snps" class="snps" multiple>
+            <option value="rs10051400" id="rs10051400" label="rs10051400"> </option>
+            <option value="rs7553708" id="rs7553708" label="rs7553708"> </option>
+            <option value=" rs78258606" id=" rs78258606" label=" rs78258606"> </option>
+            <option value="rs201551451" id="rs201551451" label="rs201551451"> </option>
+          </select>
+        </div>
+
+        <div class="col-md">
+          <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
+      </form>
+    </div>
+
+
+
+    <div class="col-10 float-right">
+      <ul id="snp_list">
+      </ul>
     </div>
   </div>
-  <div class="row h-100 mt-5">
-    <div class="col-md">
-      <h4>Or enter a .txt file of genes:</h4>
-      The file should have one gene per line.
-    </div>
+</div>
+<div class="row h-100 mt-5">
+  <div class="col-md">
+    <h4>Or enter a .txt file of snps:</h4>
+    The file should have one SNP per line.
   </div>
-  <div class="row h-100 mt-5">
-    <div class="col-md">
-      <input type="file" accept=".txt, .csv" id="snp_file">
-    </div>
+</div>
+<div class="row h-100 mt-5">
+  <div class="col-md">
+    <input type="file" accept=".txt, .csv" id="snp_file">
+  </div>
 
 
-    <div class="col-md">
-      <button class="btn col-xs-1 float-right" style="background-color: #00CED1;" type="submit"
-        onclick="deleteGenes()">Delete Genes</button>
-    </div>
-  </div>
+
+</div>
 </div>
 
 
 <div class="col-2 align-self-start">
   <button class="exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left" style="background-color: #e3e6e6;"
-    id=" exemplary_query" onclick="exemplaryGeneQuery()">Example
+    id="exemplary_query" onclick="exemplarysnpQuery()">Example
     Query</button>
 </div>
 
 
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 <script>
-  function makeButtonGroup(snp, list) {
-    let group = document.createElement('btn-group');
-    let li = document.createElement('button');
-    let x = document.createElement('button');
-    li.classList.add("btn");
-    x.classList.add("btn");
-    li.classList.add("gene_button");
-    li.innerText = snp;
-    x.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>';
-    const isThisElement = (element) => element == li.innerText;
-    x.onclick = function () {
-      snp_index = snp_list.findIndex(isThisElement);
-      if (snp_index != -1) {
-        snp_list.splice(snp_index, 1)
-      };
-      li.remove();
-      x.remove();
-    };
-    group.appendChild(li);
-    group.appendChild(x);
-    list.appendChild(group);
-
-  };
+  new MultiSelectTag('snps', {
+    rounded: true,    // default true
+    shadow: true,      // default false
+    input_id: "snp_input",
+    list_id: "snp_options",
+    container_id: "snp_container",
+    multiselect_id: "snp_multi",
+    placeholder: 'SNPs',
+  })
 </script>
 
+
+
 <script>
-  let snp_list = [];
   $(function () {
     var availableTags = [
-    {% for snp in snps %}
+      {% for snp in snps %}
         "{{snp.rsid}}",
-        {% endfor %}
+    {% endfor %}
     ];
 
   $("#snp_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(availableTags, request.term);
-
-      response(results.slice(0, 1000));
-    },
-
-    select: function (event, ui) {
-      snp_list.push(ui.item.value);
-      console.log(snp_list);
-      let list = document.getElementById("snp_list");
-      makeButtonGroup(snp_list.slice(-1), list);
-      document.getElementById('snp_input').value = "";
-      return false;
-    },
-
+      let snp_options = results.slice(0, 20);
+      console.log(snp_options);
+      let snp_opt = [];
+      snp_options.forEach((snp, index) => {
+        if (index >= 0) { let snp_object = {}; snp_object.value = snp, snp_object.label = snp; snp_opt.push(snp_object) }
+      });
+      new updateMultiSelectTag('snps', snp_opt, {
+        rounded: true,    // default true
+        shadow: true,      // default false
+        ul_name: 'snp_options',
+        input_container_id: "snp_container",
+        input_id: "snp_input"
+      });
+    }
   });
-    });
+  });
+
+
 </script>
 
 <script>
-
+  let snp_list = [];
   document.getElementById('snp_file').addEventListener('change', upload, false);
   function upload(evt) {
     var data = null;
@@ -127,59 +121,48 @@
     reader.onload = function (event) {
       var csvData = event.target.result;
       var results = Papa.parse(csvData);
-
-
       for (const array of results["data"]) {
         snp_list = snp_list.concat(array);
       };
+      console.log(snp_list);
+      let snp_opt = [];
+      snp_list.forEach((snp, index) => { if (index >= 0) { let ge = {}; ge.value = snp, ge.label = snp, ge.selected = "selected"; snp_opt.push(ge) } });
+      new updateMultiSelectTag('snps', snp_opt, {
+        rounded: true,    // default true
+        shadow: true,      // default false
+        ul_name: 'snp_options',
+        input_container_id: "snp_container",
+        input_id: "snp_input"
+      });
     };
-
-
-    let list = document.getElementById("snp_list");
-    for (const snp of csvData) {
-      makeButtonGroup(snp, list);
-    };
-
     reader.onerror = function () {
       alert('Unable to read ' + file.fileName);
     };
   };
-
 </script>
 
 
-<script>function fillGenes() {
-    let response = "{% url 'draftapp:snp_search'%}"
-    snp_list.forEach((gene, index) => {
-      if (index > 0) { response += "," }
-      response += gene
-    })
 
-    window.location.href = response
-  }</script>
-
-<script>function deleteGenes() {
-    document.getElementById("snp_list").innerHTML = "";
-    gene_list = [];
-    document.getElementById('snp_input').value = "";
-  }</script>
-
-
-<script>function exemplaryGeneQuery() {
-    snp_list = ["rs10051400"];
-    let list = document.getElementById("snp_list");
-    for (const snp of snp_list.values()) {
-      makeButtonGroup(snp, list);
-    }
+<script>function exemplarysnpQuery() {
+    $('#snps').val(["rs10051400", "rs7553708", "rs78258606", "rs201551451"]);
+    location.reload();
   }
 </script>
 
+
+
 <style>
-  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
+  .exemplary_query:hover,
+  .exemplary_query:focus,
+  .exemplary_query:active,
+  .exemplary_query.active,
+  .open>.dropdown-toggle.exemplary_query {
     color: #fff !important;
     background-color: #063944 !important;
     border-color: #063944 !important;
-}
+    /*set the color you want here*/
+  }
+
 
   .container {
     max-width: 1700px;
@@ -196,6 +179,3 @@
 </style>
 
 {% endblock %}
-
-
-

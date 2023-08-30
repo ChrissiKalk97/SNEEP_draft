@@ -13,66 +13,70 @@
 <script src="{% static 'js/multiselect_new.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 
-<div class = "container-fluid">
-<div class="container">
-  <div class="row h-200">
-    <div class="col-4">
-      <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
+<div class="container-fluid">
+  <div class="container">
+    <div class="row h-200">
+      <div class="col-4">
+        <h4>Query rSNPs for a GWAS trait by name or EFO ID:</h2>
+      </div>
+      <div class="col-4">
+        <h4>Query rSNPs for a transcription factor:</h2>
+      </div>
+      <div class="col-4">
+        <h4>Query rSNPs of a chromosome:</h2>
+      </div>
     </div>
-    <div class="col-4">
-      <h4>Query rSNPs for a transcription factor:</h2>
-    </div>
-    <div class="col-4">
-      <h4>Query rSNPs of a chromosome:</h2>
+
+
+
+
+    <div class="row input-group">
+      <form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
+
+
+
+        <div class="col-4">
+          <select name="gwas[]" id="gwas" class="gwas" multiple>
+            <option value="atherosclerosis" id="atherosclerosis" label="atherosclerosis"> atherosclerosis</option>
+            <option value="estrogen-receptor negative breast cancer" id="estrogen-receptor negative breast cancer">
+              estrogen-receptor negative breast cancer</option>
+          </select>
+        </div>
+
+
+
+        <div class="col-4">
+          <select name="tf[]" id="tf" class="tf" multiple>
+            {%for tf in tfs%}
+            <option value="{{tf.name}}"> {{tf.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-4">
+          <select name="chromosome[]" id="chr" class="chr" multiple>
+            {%for CHR in chrs%}
+            <option value="{{CHR}}"> {{CHR}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+        <div class="row h-100 mt-5">
+          <div class="col-4 mx-auto">
+            <button class="btn d-flex search" style="background-color: #063944; color: #fff; border-color: #063944"
+              type="submit">Search</button>
+      </form>
     </div>
   </div>
-
-
-
-
-  <div class="row input-group">
-    <form action="{% url 'draftapp:Gwas_search_results_dict'%}" method="get" class="d-flex" role="search">
-
-     
-
-      <div class="col-4">
-        <select name="gwas[]" id="gwas" class="gwas" multiple>
-          <option value="atherosclerosis" id = "atherosclerosis" label = "atherosclerosis"> atherosclerosis</option>
-          <option value="estrogen-receptor negative breast cancer" id ="estrogen-receptor negative breast cancer"  > estrogen-receptor negative breast cancer</option>
-        </select>
-      </div>
-
-
-
-      <div class="col-4">
-        <select name="tf[]" id="tf" class="tf" multiple>
-          {%for tf in tfs%}
-          <option value="{{tf.name}}"> {{tf.name}}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-4">
-        <select name="chromosome[]" id="chr" class="chr" multiple>
-          {%for CHR in chrs%}
-          <option value="{{CHR}}"> {{CHR}}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-
-      <div class="row h-100 mt-5">
-        <div class="col-4 mx-auto">
-          <button class="btn d-flex search" style="background-color: #063944; color: #fff; border-color: #063944" type="submit">Search</button>
-    </form>
-  </div>
-</div>
-
-
-
 </div>
 </div>
-<button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left' style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
+
+
+
+
+<button type="button" class='exemplary_query btn btn-light btn-outline-dark col-xs-2 text-left'
+  style="background-color: #e3e6e6;" id="exemplary_query" onclick="exemplaryGeneQuery()">Example
   Query</button>
 </div>
 <div class="row h-100 mt-5">
@@ -86,128 +90,146 @@
     <input type="file" accept=".txt, .csv" id="gwas_file">
   </div>
 
+  <div class="row h-100 mt-5">
+    <div class="col-12">
+      <h5>As autocomplete suggestions a selection of 20 GWAS traits is shown. If your trait of interest is not in this
+        selection,
+        type more letters and if it is part of the database it will appear.</h5>
+    </div>
+  </div>
 
 
-<script>
+  <script>
 
-  new MultiSelectTag('tf', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'transcription factors',  // default Search...
-    id: "tf_input", 
-  })
-  new MultiSelectTag('chr', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'chromosome',  // default Search...
-    id: "chr_input", 
-  })
+    new MultiSelectTag('tf', {
+      rounded: true,    // default true
+      shadow: true,      // default false
+      placeholder: 'transcription factors',  // default Search...
+      id: "tf_input",
+    })
+    new MultiSelectTag('chr', {
+      rounded: true,    // default true
+      shadow: true,      // default false
+      placeholder: 'chromosome',  // default Search...
+      id: "chr_input",
+    })
 
-  new MultiSelectTag('gwas', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'gwas',  // default Search...
-    input_id: "gwas_input", 
-    list_id: "gwas_options",
-    container_id: "gwas_container",
-    multiselect_id: "gwas_multi",
-  })
-</script>
+    new MultiSelectTag('gwas', {
+      rounded: true,    // default true
+      shadow: true,      // default false
+      placeholder: 'gwas',  // default Search...
+      input_id: "gwas_input",
+      list_id: "gwas_options",
+      container_id: "gwas_container",
+      multiselect_id: "gwas_multi",
+    })
+  </script>
 
-<script>
-  let gwas_options = [];
-  $(function () {
-    var availableTags = [
-    {%for gwas in gwases%}
+  <script>
+    let gwas_options = [];
+    $(function () {
+      var availableTags = [
+        {%for gwas in gwases %}
             "{{gwas.name}}",
-    {% endfor %}
-    {%for gwas in gwases%}
-            "{{gwas.efoid}}",
-    {% endfor %}
+      {% endfor %}
+      {%for gwas in gwases %}
+    "{{gwas.efoid}}",
+      {% endfor %}
     ];
 
     $("#gwas_input").autocomplete({
-    source: function (request, response) {
-      var results = $.ui.autocomplete.filter(availableTags, request.term);
-      gwas_options = results.slice(0, 4);
-      let gwa_opt = [];
-      gwas_options.forEach((gwas, index) => {
-      if (index >= 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas; gwa_opt.push(gwa)} 
+      source: function (request, response) {
+        var results = $.ui.autocomplete.filter(availableTags, request.term);
+        gwas_options = results.slice(0, 20);
+        let gwa_opt = [];
+        gwas_options.forEach((gwas, index) => {
+          if (index >= 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas; gwa_opt.push(gwa) }
+        });
+        new updateMultiSelectTag('gwas', gwa_opt, {
+          rounded: true,    // default true
+          shadow: true,      // default false
+          ul_name: 'gwas_options',
+          input_container_id: "gwas_container",
+          input_id: "gwas_input"
+        });
+      }
     });
-      new updateMultiSelectTag('gwas', gwa_opt, {
-        rounded: true,    // default true
-        shadow: true,      // default false
-        ul_name: 'gwas_options',
-        input_container_id: "gwas_container",
-        input_id: "gwas_input"});
-     }});
   });
-</script>
+  </script>
 
 
-<script>
-  function exemplaryGeneQuery() {
-    $('#tf').val(["AIRE", "EBF3", "ZBTB6"]);
-    $('#chr').val(["chr11", "chr12"]);
-    $('#gwas').val(["estrogen-receptor negative breast cancer", "atherosclerosis"]);
-    location.reload();
-    console.log($("#gwas"));
-  }
-    </script>
+  <script>
+    function exemplaryGeneQuery() {
+      $('#tf').val(["AIRE", "EBF3", "ZBTB6"]);
+      $('#chr').val(["chr11", "chr12"]);
+      $('#gwas').val(["estrogen-receptor negative breast cancer", "atherosclerosis"]);
+      location.reload();
+      console.log($("#gwas"));
+    }
+  </script>
 
-<script>
-  let gwas_list = [];
-  document.getElementById('gwas_file').addEventListener('change', upload, false);
-  function upload(evt) {
-    var data = null;
-    var file = evt.target.files[0];
-    var reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function (event) {
-      var csvData = event.target.result;
-      var results = Papa.parse(csvData);
-      for (const array of results["data"]) {
-        gwas_list = gwas_list.concat(array);
+  <script>
+    let gwas_list = [];
+    document.getElementById('gwas_file').addEventListener('change', upload, false);
+    function upload(evt) {
+      var data = null;
+      var file = evt.target.files[0];
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function (event) {
+        var csvData = event.target.result;
+        var results = Papa.parse(csvData);
+        for (const array of results["data"]) {
+          gwas_list = gwas_list.concat(array);
+        };
+        console.log(gwas_list);
+        let gwa_opt = [];
+        gwas_list.forEach((gwas, index) => { if (index >= 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas, gwa.selected = "selected"; gwa_opt.push(gwa) } });
+
+        new updateMultiSelectTag('gwas', gwa_opt, {
+          rounded: true,    // default true
+          shadow: true,      // default false
+          ul_name: 'gwas_options',
+          input_container_id: "gwas_container",
+          input_id: "gwas_input"
+        });
+
+
       };
-      console.log(gwas_list);
-      let gwa_opt = [];
-      gwas_list.forEach((gwas, index) =>  {if (index >= 0) { let gwa = {}; gwa.value = gwas, gwa.label = gwas, gwa.selected = "selected"; gwa_opt.push(gwa)} });
-    
-      new updateMultiSelectTag('gwas', gwa_opt, {
-        rounded: true,    // default true
-        shadow: true,      // default false
-        ul_name: 'gwas_options',
-        input_container_id: "gwas_container",
-        input_id: "gwas_input"});
-     
-    
+
+      reader.onerror = function () {
+        alert('Unable to read ' + file.fileName);
+      };
     };
 
-    reader.onerror = function () {
-      alert('Unable to read ' + file.fileName);
-    };
-  };
-
-  
-
-
-</script>
 
 
 
-<style>
-  .exemplary_query:hover, .exemplary_query:focus, .exemplary_query:active, .exemplary_query.active, .open>.dropdown-toggle.exemplary_query {
-    color: #fff !important;
-    background-color: #063944 !important;
-    border-color: #063944 !important; /*set the color you want here*/
-}
-.search:hover, .search:focus, .search:active, .search.active, .open>.dropdown-toggle.search {
-  color: #063944 !important;
-    background-color: white !important;
-    border-color: #063944 !important; /*set the color you want here*/
-}
-
-</style>
-{% endblock %}
+  </script>
 
 
+
+  <style>
+    .exemplary_query:hover,
+    .exemplary_query:focus,
+    .exemplary_query:active,
+    .exemplary_query.active,
+    .open>.dropdown-toggle.exemplary_query {
+      color: #fff !important;
+      background-color: #063944 !important;
+      border-color: #063944 !important;
+      /*set the color you want here*/
+    }
+
+    .search:hover,
+    .search:focus,
+    .search:active,
+    .search.active,
+    .open>.dropdown-toggle.search {
+      color: #063944 !important;
+      background-color: white !important;
+      border-color: #063944 !important;
+      /*set the color you want here*/
+    }
+  </style>
+  {% endblock %}

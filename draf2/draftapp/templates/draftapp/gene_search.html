@@ -16,44 +16,43 @@
     </div>
     <div class="row input-group">
       <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
-  
-       
-  
+
+
+
         <div class="col-4">
           <select name="genes[]" id="genes" class="genes" multiple>
-            <option value="EBF1" id = "EBF1" label = "EBF1"> </option>
-            <option value="OGFOD2" id ="OGFOD2"  label = "OGFOD2"> </option>
+            <option value="EBF1" id="EBF1" label="EBF1"> </option>
+            <option value="OGFOD2" id="OGFOD2" label="OGFOD2"> </option>
           </select>
         </div>
 
-      <div class="col-md">
-        <button class="btn d-flex" style="background-color: #00CED1;" type="submit"
-          >Search</button>
-        </form>
-      </div>
-
-
-
-      <div class="col-10 float-right">
-        <ul id="gene_list">
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="row h-100 mt-5">
-    <div class="col-md">
-      <h4>Or enter a .txt file of genes:</h4>
-      The file should have one gene per line.
-    </div>
-  </div>
-  <div class="row h-100 mt-5">
-    <div class="col-md">
-      <input type="file" accept=".txt, .csv" id="gene_file">
+        <div class="col-md">
+          <button class="btn d-flex" style="background-color: #00CED1;" type="submit">Search</button>
+      </form>
     </div>
 
 
-   
+
+    <div class="col-10 float-right">
+      <ul id="gene_list">
+      </ul>
+    </div>
   </div>
+</div>
+<div class="row h-100 mt-5">
+  <div class="col-md">
+    <h4>Or enter a .txt file of genes:</h4>
+    The file should have one gene per line.
+  </div>
+</div>
+<div class="row h-100 mt-5">
+  <div class="col-md">
+    <input type="file" accept=".txt, .csv" id="gene_file">
+  </div>
+
+
+
+</div>
 </div>
 
 
@@ -68,10 +67,11 @@
   new MultiSelectTag('genes', {
     rounded: true,    // default true
     shadow: true,      // default false
-    input_id: "gene_input", 
+    input_id: "gene_input",
     list_id: "gene_options",
     container_id: "gene_container",
     multiselect_id: "gene_multi",
+    placeholder: 'genes',
   })
 </script>
 
@@ -91,22 +91,24 @@
   $("#gene_input").autocomplete({
     source: function (request, response) {
       var results = $.ui.autocomplete.filter(availableTags, request.term);
-      let gene_options = results.slice(0, 4);
+      let gene_options = results.slice(0, 20);
       console.log(gene_options);
       let gene_opt = [];
       gene_options.forEach((gene, index) => {
-      if (index >= 0) { let ge = {}; ge.value = gene, ge.label = gene; gene_opt.push(ge)} 
-    });
+        if (index >= 0) { let ge = {}; ge.value = gene, ge.label = gene; gene_opt.push(ge) }
+      });
       new updateMultiSelectTag('genes', gene_opt, {
         rounded: true,    // default true
         shadow: true,      // default false
         ul_name: 'gene_options',
         input_container_id: "gene_container",
-        input_id: "gene_input"});
-     }});
+        input_id: "gene_input"
+      });
+    }
+  });
   });
 
-  
+
 </script>
 
 <script>
@@ -125,13 +127,14 @@
       };
       console.log(gene_list);
       let gene_opt = [];
-      gene_list.forEach((gene, index) =>  {if (index >= 0) { let ge = {}; ge.value = gene, ge.label = gene, ge.selected = "selected"; gene_opt.push(ge)} });
+      gene_list.forEach((gene, index) => { if (index >= 0) { let ge = {}; ge.value = gene, ge.label = gene, ge.selected = "selected"; gene_opt.push(ge) } });
       new updateMultiSelectTag('genes', gene_opt, {
         rounded: true,    // default true
         shadow: true,      // default false
         ul_name: 'gene_options',
         input_container_id: "gene_container",
-        input_id: "gene_input"});
+        input_id: "gene_input"
+      });
     };
     reader.onerror = function () {
       alert('Unable to read ' + file.fileName);

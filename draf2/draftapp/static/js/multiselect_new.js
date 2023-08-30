@@ -4,7 +4,7 @@
 
 
 
-function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
+function MultiSelectTag(el, customs = { shadow: false, rounded: true }) {
     var element = null
     var options = null
     var customSelectContainer = null
@@ -28,7 +28,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         setValues(false)
 
         button.addEventListener('click', () => {
-            if(drawer.classList.contains('hidden')) {
+            if (drawer.classList.contains('hidden')) {
                 initOptions()
                 enableItemSelection()
                 drawer.classList.remove('hidden')
@@ -36,24 +36,24 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
             }
         })
 
-       input.addEventListener('keyup', (e) => {
-                initOptions(e.target.value)
-                enableItemSelection()
+        input.addEventListener('keyup', (e) => {
+            initOptions(e.target.value)
+            enableItemSelection()
         })
 
         input.addEventListener('keydown', (e) => {
-            if(e.key === 'Backspace' && !e.target.value && inputContainer.childElementCount > 1) {
+            if (e.key === 'Backspace' && !e.target.value && inputContainer.childElementCount > 1) {
                 const child = body.children[inputContainer.childElementCount - 2].firstChild
                 const option = options.find((op) => op.value == child.dataset.value)
                 option.selected = false
                 removeTag(child.dataset.value)
                 setValues()
             }
-            
+
         })
-        
-        window.addEventListener('click', (e) => {   
-            if (!customSelectContainer.contains(e.target)){
+
+        window.addEventListener('click', (e) => {
+            if (!customSelectContainer.contains(e.target)) {
                 drawer.classList.add('hidden')
             }
         });
@@ -64,7 +64,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         // Create custom elements
         options = getOptions();
         element.classList.add('hidden')
-        
+
         // .multi-select-tag
         customSelectContainer = document.createElement('div')
         customSelectContainer.classList.add('mult-select-tag')
@@ -76,23 +76,23 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         // body
         body = document.createElement('div')
         body.classList.add('body')
-        if(customs.shadow) {
+        if (customs.shadow) {
             body.classList.add('shadow')
         }
-        if(customs.rounded) {
+        if (customs.rounded) {
             body.classList.add('rounded')
         }
-        
+
         // .input-container
         inputContainer = document.createElement('div')
         inputContainer.classList.add('input-container')
-        inputContainer.id=`${customs.container_id}`
+        inputContainer.id = `${customs.container_id}`
 
         // input
         input = document.createElement('input')
         input.classList.add('input')
         input.placeholder = `${customs.placeholder || 'Search...'}`
-        input.id=`${customs.input_id}`
+        input.id = `${customs.input_id}`
 
         inputBody = document.createElement('inputBody')
         inputBody.classList.add('input-body')
@@ -119,19 +119,19 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
 
         drawer = document.createElement('div');
         drawer.classList.add(...['drawer', 'hidden'])
-        if(customs.shadow) {
+        if (customs.shadow) {
             drawer.classList.add('shadow')
         }
-        if(customs.rounded) {
+        if (customs.rounded) {
             drawer.classList.add('rounded')
         }
         drawer.append(inputBody)
         ul = document.createElement('ul');
-        ul.id=`${customs.list_id}`;
+        ul.id = `${customs.list_id}`;
 
-        
+
         drawer.appendChild(ul)
-    
+
         customSelectContainer.appendChild(wrapper)
         customSelectContainer.appendChild(drawer)
 
@@ -155,12 +155,12 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
                 const li = document.createElement('li')
                 li.innerHTML = option.label
                 li.dataset.value = option.value
-                
+
                 // For search
-                if(val && option.label.toLowerCase().startsWith(val.toLowerCase())) {
+                if (val && option.label.toLowerCase().startsWith(val.toLowerCase())) {
                     ul.appendChild(li)
                 }
-                else if(!val) {
+                else if (!val) {
                     ul.appendChild(li)
                 }
             }
@@ -175,12 +175,12 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         const itemLabel = document.createElement('div');
         itemLabel.classList.add('item-label');
         itemLabel.innerHTML = option.label
-        itemLabel.dataset.value = option.value 
+        itemLabel.dataset.value = option.value
         const itemClose = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item-close-svg">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>`, 'image/svg+xml').documentElement
- 
+
         itemClose.addEventListener('click', (e) => {
             const unselectOption = options.find((op) => op.value == option.value)
             unselectOption.selected = false
@@ -188,7 +188,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
             initOptions()
             setValues()
         })
-    
+
         itemDiv.appendChild(itemLabel)
         itemDiv.appendChild(itemClose)
         inputContainer.append(itemDiv)
@@ -197,7 +197,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     function enableItemSelection() {
         console.log("enable item selection old")
         // Add click listener to the list items
-        for(var li of ul.children) {
+        for (var li of ul.children) {
             li.addEventListener('click', (e) => {
                 options.find((o) => o.value == e.target.dataset.value).selected = true
                 input.value = null
@@ -211,8 +211,8 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     function isTagSelected(val) {
         console.log("is tag selected old")
         // If the item is already selected
-        for(var child of inputContainer.children) {
-            if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
+        for (var child of inputContainer.children) {
+            if (!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
                 return true
             }
         }
@@ -221,20 +221,20 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     function removeTag(val) {
         console.log("remove tag old")
         // Remove selected item
-        for(var child of inputContainer.children) {
-            if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
+        for (var child of inputContainer.children) {
+            if (!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
                 inputContainer.removeChild(child)
             }
         }
     }
-    function setValues(fireEvent=true) {
+    function setValues(fireEvent = true) {
         console.log("set values old")
         // Update element final values
         selected_values = []
-        for(var i = 0; i < options.length; i++) {
+        for (var i = 0; i < options.length; i++) {
             element.options[i].selected = options[i].selected
-            if(options[i].selected) {
-                selected_values.push({label: options[i].label, value: options[i].value})
+            if (options[i].selected) {
+                selected_values.push({ label: options[i].label, value: options[i].value })
             }
         }
         if (fireEvent && customs.hasOwnProperty('onChange')) {
@@ -260,19 +260,19 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
 
 
 
-function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:true}){
-        let element = document.getElementById(el)
-        let ul = document.getElementById(`${customs.ul_name}`)
-        let inputContainer = document.getElementById(`${customs.input_container_id}`);
-        let input = document.getElementById(`${customs.input_id}`);
-        if (options.length > 0){
+function updateMultiSelectTag(el, options, customs = { shadow: false, rounded: true }) {
+    let element = document.getElementById(el)
+    let ul = document.getElementById(`${customs.ul_name}`)
+    let inputContainer = document.getElementById(`${customs.input_container_id}`);
+    let input = document.getElementById(`${customs.input_id}`);
+    if (options.length > 0) {
         assignOptions()
         initOptions()
         enableItemSelection()
         //setValues()
     }
-    
-   
+
+
 
     function initOptions(val = null) {
         console.log("init options")
@@ -285,17 +285,18 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
                 const li = document.createElement('li')
                 li.innerHTML = option.label
                 li.dataset.value = option.value
-                
+
                 // For search
-                if(val && option.label.toLowerCase().startsWith(val.toLowerCase())) {
+                if (val && option.label.toLowerCase().startsWith(val.toLowerCase())) {
                     ul.appendChild(li)
                 }
-                else if(!val) {
+                else if (!val) {
                     ul.appendChild(li)
                 }
-            
+
+            }
         }
-    }}
+    }
 
     function createTag(option) {
         console.log("create tag")
@@ -305,12 +306,12 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
         const itemLabel = document.createElement('div');
         itemLabel.classList.add('item-label');
         itemLabel.innerHTML = option.label
-        itemLabel.dataset.value = option.value 
+        itemLabel.dataset.value = option.value
         const itemClose = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item-close-svg">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>`, 'image/svg+xml').documentElement
- 
+
         itemClose.addEventListener('click', (e) => {
             const unselectOption = options.find((op) => op.value == option.value)
             unselectOption.selected = false
@@ -318,7 +319,7 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
             initOptions()
             setValues()
         })
-    
+
         itemDiv.appendChild(itemLabel)
         itemDiv.appendChild(itemClose)
         inputContainer.append(itemDiv)
@@ -327,15 +328,12 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
     function enableItemSelection() {
         console.log("enable selection")
         // Add click listener to the list items
-        for(var li of ul.children) {
+        for (var li of ul.children) {
             li.addEventListener('click', (e) => {
                 options.find((o) => o.value == e.target.dataset.value).selected = true
-                console.log("click", element.options)
-                console.log("selected", options)
                 input.value = null
                 initOptions()
                 setValues()
-                console.log("set values", element.options)
                 input.focus()
             })
         }
@@ -346,27 +344,23 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
         console.log("set values")
         // Update element final values
         selected_values = []
-        
-        for(var i = 0; i < options.length; i++) {
+
+        for (var i = 0; i < options.length; i++) {
             console.log("option i", options[i], options[i].selected)
             document.getElementById(options[i].label).selected = options[i].selected
             console.log("change by Id", document.getElementById(options[i].label), document.getElementById(options[i].label).selected)//, $("#"+el).options[i].selected)
-            if(options[i].selected) {
-                selected_values.push({label: options[i].label, value: options[i].value})
+            if (options[i].selected) {
+                selected_values.push({ label: options[i].label, value: options[i].value })
             }
         }
-        console.log(selected_values)
-        /*if (fireEvent && customs.hasOwnProperty('onChange')) {
-            customs.onChange(selected_values)
-        }*/
     }
 
 
-  function isTagSelected(val) {
-    console.log("is selected")
+    function isTagSelected(val) {
+        console.log("is selected")
         // If the item is already selected
-        for(var child of inputContainer.children) {
-            if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
+        for (var child of inputContainer.children) {
+            if (!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
                 return true
             }
         }
@@ -375,14 +369,14 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
     function removeTag(val) {
         console.log("remove tag")
         // Remove selected item
-        for(var child of inputContainer.children) {
-            if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
+        for (var child of inputContainer.children) {
+            if (!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
                 inputContainer.removeChild(child)
             }
         }
     }
 
-    
+
     //probably need to pass the options to element.options somehow
     //how were they given in the original code???
     function assignOptions() {
@@ -392,24 +386,26 @@ function updateMultiSelectTag (el, options, customs = {shadow: false, rounded:tr
             option.setAttribute("value", opt.label);
             option.setAttribute("label", opt.label);
             option.setAttribute("id", opt.label);
-            if (opt.selected){
-            option.setAttribute("selected", opt.selected);}
+            if (opt.selected) {
+                option.setAttribute("selected", opt.selected);
+            }
             option.innerHTML = opt.label;
             return option;
         }
         //element.options.length = 0;
         // Map element options
         for (let opt of options) {
-            if ($("#"+el+" option:contains('"+opt.value+"')").length == 0){
-            element.options.add(createOption(opt));
+            if ($("#" + el + " option:contains('" + opt.value + "')").length == 0) {
+                element.options.add(createOption(opt));
             }
-       
-        else if(opt.selected && opt.label){
-            document.getElementById(opt.label).selected = opt.selected
-            console.log("selected!!", document.getElementById(opt.label))
-        }  } 
+
+            else if (opt.selected && opt.label) {
+                document.getElementById(opt.label).selected = opt.selected
+                console.log("selected!!", document.getElementById(opt.label))
+            }
+        }
     }
 }
-   
+
 
 
