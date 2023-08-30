@@ -67,8 +67,7 @@ def gene_query(query):
             
 def gene_search_results_snps(request):
     if request.method == 'GET':
-        query = request.GET.get('genes')
-        query = query.split(",")
+        query = request.GET.getlist('genes[]')
         if query:
             gene_dict, hits, no_hits = gene_query(query)
             no_hits = ", ".join(no_hits)
@@ -87,9 +86,9 @@ class SnpsDetailView(generic.DetailView):
     model = Snps
     template_name = 'draftapp/snps_detail.html' 
 
-def snp_search_results(request, snps):
+def snp_search_results(request):
     if request.method == 'GET':
-        snps = snps.split(",")
+        snps = request.GET.getlist('snps[]')
         snps_objects = Snps.objects.filter(rsid__in = snps).distinct().values("rsid", "start", "chr", "end")
         snps_rsid = [rsnp["rsid"] for rsnp in snps_objects]
         tfsxsnps = Tfsxsnps.objects.filter(Q(rsid__in = snps_rsid)).distinct().values("id", "rsid", "tfid", "allele1", "allele2",\
