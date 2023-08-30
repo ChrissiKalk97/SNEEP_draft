@@ -208,14 +208,23 @@ def snps_detail(request, pk):
     Retrieve tfsxsnps data in json format
     With url: draftapp/REST_API/snps/rsid
     """
-    try:
-        snp = Snps.objects.get(pk=pk)
-    except Snps.DoesNotExist:
-        return HttpResponse(status=404)
+    if "&" in pk:
+            snps = pk.split("&")
+            snp_instances = Snps.objects.filter(Q(rsid__in = snps))
+            if request.method == 'GET':
+                snp_list = list(snp_instances)
+                serializer = SnpsSerializer(snp_list, many=True)
+                return JsonResponse(serializer.data, safe = False)
+            
+    else:
+        try:
+            snp = Snps.objects.get(pk=pk)
+        except Snps.DoesNotExist:
+            return HttpResponse(status=404)
 
-    if request.method == 'GET':
-        serializer = SnpsSerializer(snp)
-        return JsonResponse(serializer.data)
+        if request.method == 'GET':
+            serializer = SnpsSerializer(snp)
+            return JsonResponse(serializer.data)
     
 def GWASQueryRESTAPIview(request, pk):
     """
