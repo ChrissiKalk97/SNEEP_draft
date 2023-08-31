@@ -14,7 +14,8 @@
     <div class="col-12">
       <h4>Enter a gene to find associated rSNPs:</h4>
     </div>
-    <div class="row input-group">
+    <div class="row input-group"
+      title="Only the top20 gene hits are shown as options, if your gene of interest is not there, try to type more letters.">
       <form action="{% url 'draftapp:gene_search_results'%}" method="get" class="d-flex" role="search">
 
 
