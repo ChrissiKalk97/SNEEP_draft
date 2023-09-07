@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'SNEEPtest',  
         'USER': 'ckalk',  
-        'PASSWORD': 'T+C230720<3',  
+        'PASSWORD': 'SNEEP_pass',  
         'HOST': 'localhost',  
         'PORT': '3306',  
         'OPTIONS': {  
