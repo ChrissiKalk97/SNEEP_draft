@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'SNEEP_draft'
+copyright = '2023, SchulzLab'
+author = 'Kalk'
 
 release = '0.1'
 version = '0.1.0'
@@ -17,7 +17,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-]
+    'sphinx_rtd_theme',
+    ]
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
@@ -26,6 +27,8 @@ intersphinx_mapping = {
 intersphinx_disabled_domains = ['std']
 
 templates_path = ['_templates']
+
+html_theme_path = ["_themes", ]
 
 # -- Options for HTML output
 
