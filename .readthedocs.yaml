@@ -7,7 +7,7 @@ build:
 
 python:
   install:
-    - requirements: draf2/docs/requirements.txt
+    - requirements: docs/requirements.txt
 
 sphinx:
-  configuration: draf2/docs/docs/source/conf.py
+  configuration: docs/docs/source/conf.py
