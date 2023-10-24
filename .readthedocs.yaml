@@ -10,4 +10,4 @@ python:
     - requirements: draf2/docs/requirements.txt
 
 sphinx:
-  configuration: docs/source/conf.py
+  configuration: draf2/docs/docs/source/conf.py
